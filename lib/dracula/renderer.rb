@@ -1,6 +1,5 @@
 require 'redcarpet'
 require 'pygments'
-require 'nokogiri'
 
 module Dracula
   class Renderer
@@ -13,12 +12,9 @@ module Dracula
     end
 
     def self.inline_highlight(html)
-      doc = Nokogiri::HTML(html)
-      doc.search("//pre").each do |pre|
-        code = pre.search("//code[@class]").first
-        pre.replace Pygments.highlight(code.text, :lexer => code[:class])
+      html.gsub %r(<pre><code class=\"([^"]*)\">([^<]*)</code></pre>) do
+        Pygments.highlight($2, :lexer => $1)
       end
-      doc.at_css("body").inner_html.to_s + "\n"
     end
   end
 end

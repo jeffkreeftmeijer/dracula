@@ -13,5 +13,4 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency('pygments.rb', '~> 0.4.2')
   spec.add_runtime_dependency('redcarpet', '~> 2.2.2')
-  spec.add_runtime_dependency('nokogiri', '~> 1.5.9')
 end
