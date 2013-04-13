@@ -27,11 +27,11 @@ describe Dracula::Resource, 'concerning paths' do
   end
 
   it "has an output path with an html extension for markdown files" do
-    about_resource.output_path.should == File.join(root_path, '_output/about/index.html')
+    about_resource.output_path.to_s.should == File.join(root_path, '_output/about/index.html')
   end
 
   it "has an output path for files that don't need formatting" do
-    stylesheet_resource.output_path.should == File.join(root_path, '_output/style.css')
+    stylesheet_resource.output_path.to_s.should == File.join(root_path, '_output/style.css')
   end
 end
 

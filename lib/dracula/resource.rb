@@ -19,10 +19,12 @@ module Dracula
 
     def output_path
       if needs_rendering?
-        File.join(output_directory, "#{@source_path.basename('.*')}.html")
+        path = File.join(output_directory, "#{@source_path.basename('.*')}.html")
       else
-        File.join(output_directory, @source_path.basename)
+        path = File.join(output_directory, @source_path.basename)
       end
+
+      Pathname.new(path)
     end
 
     def raw_content
