@@ -1,0 +1,5 @@
+require File.expand_path('../../../lib/dracula', __FILE__)
+
+task :generate do
+  Dracula::Generator.new(File.dirname(__FILE__)).generate
+end
