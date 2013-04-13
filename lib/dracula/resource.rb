@@ -42,9 +42,13 @@ module Dracula
     end
 
     def layouts
-      paths = [File.join(@root_path, '_layout.html.erb')]
-      paths.unshift File.join(@root_path, type, '_layout.html.erb') if type
-      
+      paths = []
+
+      if needs_layout?
+        paths << File.join(@root_path, type, '_layout.html.erb') if type
+        paths << File.join(@root_path, '_layout.html.erb')
+      end
+
       paths.map { |path| Layout.new(path) if File.exist? path }.compact
     end
 
@@ -52,6 +56,10 @@ module Dracula
 
     def needs_rendering?
       @source_path.extname == '.markdown'
+    end
+
+    def needs_layout?
+      output_path.extname == '.html'
     end
 
     def type

@@ -44,6 +44,10 @@ describe Dracula::Resource, 'concerning content' do
     index_resource.content.should.include 'Header'
   end
 
+  it "doesn't use layouts for non HTML output files" do
+    stylesheet_resource.content.should.not.include 'Header'
+  end
+
   it "uses Markdown formatting" do
     index_resource.content.should.include '<h2>Welcome</h2>'
   end
@@ -63,5 +67,9 @@ describe Dracula::Resource, 'concerning layouts' do
       File.join(root_path, 'about/_layout.html.erb'),
       File.join(root_path, '_layout.html.erb')
     ]
+  end
+
+  it "doesn't have any layouts" do
+    stylesheet_resource.layouts.should == []
   end
 end
