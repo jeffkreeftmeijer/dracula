@@ -13,6 +13,14 @@ def about_resource
   Dracula::Resource.new(File.join(root_path, 'about/index.markdown'), root_path)
 end
 
+def article_resource
+  Dracula::Resource.new(
+    File.join(root_path, 'articles/2013/article.markdown'),
+    root_path, 
+    {'routes' => {'articles' => ''}}
+  )
+end
+
 def stylesheet_resource
   Dracula::Resource.new(File.join(root_path, 'style.css'), root_path)
 end
@@ -65,6 +73,13 @@ describe Dracula::Resource, 'concerning layouts' do
   it "has multiple layouts" do
     about_resource.layouts.map(&:path).should == [
       File.join(root_path, 'about/_layout.html.erb'),
+      File.join(root_path, '_layout.html.erb')
+    ]
+  end
+
+  it "has a multiple layouts while two directories deep" do
+    article_resource.layouts.map(&:path).should == [
+      File.join(root_path, 'articles/_layout.html.erb'),
       File.join(root_path, '_layout.html.erb')
     ]
   end
