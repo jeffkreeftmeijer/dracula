@@ -1,9 +1,18 @@
 require 'pathname'
+require 'yaml'
 
 module Dracula
   class Generator
     def initialize(root_path)
       @root_path = Pathname.new(root_path)
+
+      config_path = File.join(@root_path, '_config.yml')
+
+      if File.exist? config_path
+        @config = YAML.load_file(config_path)
+      else
+        @config = {}
+      end
     end
 
     def resources
@@ -13,7 +22,7 @@ module Dracula
     def generate
       Dir["#{@root_path}/**/*"].each do |path|
         if File.file?(path) && File.basename(path) !~ /^_/
-          resources << Resource.new(path, @root_path) 
+          resources << Resource.new(path, @root_path, @config) 
         end
       end
 
