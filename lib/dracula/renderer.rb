@@ -14,8 +14,9 @@ module Dracula
 
     def self.inline_highlight(html)
       doc = Nokogiri::HTML(html)
-      doc.search("//code[@class]").each do |code|
-        code.replace Pygments.highlight(code.text.rstrip, :lexer => code[:class])
+      doc.search("//pre").each do |pre|
+        code = pre.search("//code[@class]").first
+        pre.replace Pygments.highlight(code.text, :lexer => code[:class])
       end
       doc.at_css("body").inner_html.to_s + "\n"
     end

@@ -7,6 +7,6 @@ describe Dracula::Renderer do
   end
 
   it "highlights embedded code blocks" do
-    Dracula::Renderer.render("```ruby\nbar\n```").should == "<pre><div class=\"highlight\">\n<pre><span class=\"n\">bar</span>\n</pre>\n</div>\n</pre>\n"
+    Dracula::Renderer.render("```ruby\nbar\n```").should == "<div class=\"highlight\"><pre><span class=\"n\">bar</span>\n</pre></div>\n"
   end
 end
