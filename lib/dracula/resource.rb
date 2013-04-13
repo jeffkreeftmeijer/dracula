@@ -4,17 +4,21 @@ require 'dracula/renderer'
 
 module Dracula
   class Resource
-    def initialize(source_path, root_path)
+    def initialize(source_path, root_path, config = {})
       @source_path = Pathname.new(source_path)
       @root_path = Pathname.new(root_path)
+      @config = config
     end
 
     def output_directory
-      if relative_source_directory.to_s == '.'
-        output_root_directory
-      else
-        File.join(output_root_directory, relative_source_directory)
-      end
+      return output_root_directory if relative_source_directory.to_s == '.'
+
+      if @config['namespaces'] && namespace = @config['namespaces'][type]
+        split_path = relative_source_directory.to_s.split('/')
+        split_path[0] = namespace
+      end 
+
+      File.join(output_root_directory, split_path || relative_source_directory)
     end
 
     def output_path
