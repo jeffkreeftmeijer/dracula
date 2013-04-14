@@ -22,13 +22,7 @@ module Dracula
     end
 
     def output_path
-      if needs_rendering?
-        path = File.join(output_directory, "#{@source_path.basename('.*')}.html")
-      else
-        path = File.join(output_directory, @source_path.basename)
-      end
-
-      Pathname.new(path)
+      Pathname.new(File.join(output_directory, output_basename))
     end
 
     def raw_content
@@ -59,7 +53,7 @@ module Dracula
     private 
 
     def needs_rendering?
-      @source_path.extname == '.markdown'
+      %w(.markdown .erb).include? @source_path.extname 
     end
 
     def needs_layout?
@@ -82,6 +76,12 @@ module Dracula
 
     def output_root_directory
       File.join(@root_path, '_output')
+    end
+
+    def output_basename
+      basename = @source_path.basename.to_s
+      basename.gsub!(/\.(.*)/, '.html') if needs_rendering?
+      basename
     end
   end
 end

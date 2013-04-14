@@ -10,7 +10,7 @@ def index_resource
 end
 
 def about_resource
-  Dracula::Resource.new(File.join(root_path, 'about/index.markdown'), root_path)
+  Dracula::Resource.new(File.join(root_path, 'about/index.html.erb'), root_path)
 end
 
 def article_resource
@@ -39,6 +39,10 @@ describe Dracula::Resource, 'concerning paths' do
   end
 
   it "has an output path with an html extension for markdown files" do
+    index_resource.output_path.to_s.should == File.join(root_path, '_output/index.html')
+  end
+
+  it "has an output path with an html extension for ERB files" do
     about_resource.output_path.to_s.should == File.join(root_path, '_output/about/index.html')
   end
 
