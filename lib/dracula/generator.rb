@@ -20,7 +20,9 @@ module Dracula
         @resources = []
 
         Dir["#{@root_path}/**/*"].each do |path|
-          if File.file?(path) && File.basename(path) !~ /^_/
+          path = Pathname(path)
+
+          if File.file?(path) && File.basename(path) !~ /^_/ && path.relative_path_from(@root_path).to_s !~ /^_/
             @resources << Resource.new(path, @root_path, @config) 
           end
         end
