@@ -1,6 +1,7 @@
 require 'pathname'
 require 'dracula/layout'
 require 'dracula/renderer/markdown'
+require 'dracula/renderer/erb'
 
 module Dracula
   class Resource
@@ -30,7 +31,7 @@ module Dracula
     end
 
     def content
-      content = needs_rendering? ? Renderer::Markdown.render(raw_content) : raw_content
+      content = needs_rendering? ? renderer.render(raw_content) : raw_content
 
       layouts.each do |layout|
         content = layout.render { content }
@@ -52,8 +53,17 @@ module Dracula
 
     private 
 
+    def renderer
+      case @source_path.extname
+      when /markdown$/ 
+        Renderer::Markdown
+      when /erb$/ 
+        Renderer::ERB
+      end
+    end
+
     def needs_rendering?
-      %w(.markdown .erb).include? @source_path.extname 
+      !renderer.nil?
     end
 
     def needs_layout?

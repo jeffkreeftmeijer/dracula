@@ -68,7 +68,11 @@ describe Dracula::Resource, 'concerning content' do
     index_resource.content.should.include '<h2>Welcome</h2>'
   end
 
-  it "doesn't use Markdown formatting on non Markdown files" do
+  it "renders ERB" do
+    about_resource.content.should.include 'foo,bar,baz'
+  end
+
+  it "doesn't do formatting for non Markdown or ERB files" do
     stylesheet_resource.content.should.not.include '<p>'
   end
 end
