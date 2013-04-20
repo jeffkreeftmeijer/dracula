@@ -16,16 +16,20 @@ module Dracula
     end
 
     def resources
-      @resources ||= []
-    end
+      unless @resources
+        @resources = []
 
-    def generate
-      Dir["#{@root_path}/**/*"].each do |path|
-        if File.file?(path) && File.basename(path) !~ /^_/
-          resources << Resource.new(path, @root_path, @config) 
+        Dir["#{@root_path}/**/*"].each do |path|
+          if File.file?(path) && File.basename(path) !~ /^_/
+            @resources << Resource.new(path, @root_path, @config) 
+          end
         end
       end
 
+      @resources
+    end
+
+    def generate
       resources.each do |resource|
         FileUtils.mkdir_p(resource.output_directory)
 
