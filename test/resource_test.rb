@@ -15,7 +15,7 @@ end
 
 def article_resource
   Dracula::Resource.new(
-    File.join(root_path, 'articles/2013/article.markdown'),
+    File.join(root_path, 'articles/2013/article/index.markdown'),
     root_path, 
     {'namespaces' => {'articles' => ''}}
   )
@@ -35,7 +35,7 @@ describe Dracula::Resource, 'concerning paths' do
   end
 
   it "has a output directory that has been overwritten by the settings file" do
-    article_resource.output_directory.to_s.should == File.join(root_path, '_output/2013')
+    article_resource.output_directory.to_s.should == File.join(root_path, '_output/2013/article')
   end
 
   it "has an output path with an html extension for markdown files" do
