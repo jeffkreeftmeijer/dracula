@@ -52,6 +52,10 @@ module Dracula
       paths.map { |path| Layout.new(path) if File.exist? path }.compact
     end
 
+    def url
+      "/#{output_directory.relative_path_from(output_root_directory)}"
+    end
+
     private 
 
     def renderer
@@ -86,7 +90,7 @@ module Dracula
     end
 
     def output_root_directory
-      File.join(@root_path, '_output')
+      Pathname.new(File.join(@root_path, '_output'))
     end
 
     def output_basename

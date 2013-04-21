@@ -100,3 +100,9 @@ describe Dracula::Resource, 'concerning layouts' do
     stylesheet_resource.layouts.should == []
   end
 end
+
+describe Dracula::Resource, 'concerning urls' do
+  it "has an url" do
+    about_resource.url.should == '/about'
+  end
+end
