@@ -35,6 +35,8 @@ module Dracula
 
     def generate
       resources.values.flatten.each do |resource|
+        resource.binding = binding
+
         FileUtils.mkdir_p(resource.output_directory)
 
         File.open(resource.output_path, 'w') do |file|
