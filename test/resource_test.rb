@@ -72,6 +72,11 @@ describe Dracula::Resource, 'concerning content' do
     about_resource.content.should.include 'foo,bar,baz'
   end
 
+  it "uses passed bindings" do
+    about_resource.binding = binding
+    about_resource.content.should.include root_path
+  end
+
   it "doesn't do formatting for non Markdown or ERB files" do
     stylesheet_resource.content.should.not.include '<p>'
   end
