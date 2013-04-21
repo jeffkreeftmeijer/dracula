@@ -17,13 +17,15 @@ module Dracula
 
     def resources
       unless @resources
-        @resources = []
+        @resources = {}
 
         Dir["#{@root_path}/**/*"].each do |path|
           path = Pathname(path)
 
           if File.file?(path) && File.basename(path) !~ /^_/ && path.relative_path_from(@root_path).to_s !~ /^_/
-            @resources << Resource.new(path, @root_path, @config) 
+            resource = Resource.new(path, @root_path, @config) 
+            @resources[resource.type] ||= []
+            @resources[resource.type] << resource
           end
         end
       end
@@ -32,7 +34,7 @@ module Dracula
     end
 
     def generate
-      resources.each do |resource|
+      resources.values.flatten.each do |resource|
         FileUtils.mkdir_p(resource.output_directory)
 
         File.open(resource.output_path, 'w') do |file|
