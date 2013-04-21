@@ -1,7 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name     = 'dracula'
   spec.version  = '0.1.0'
-  spec.date     = Date.today.to_s
 
   spec.summary  = "A simple static site generator that doesn't only do technical blogs." 
 
