@@ -105,4 +105,8 @@ describe Dracula::Resource, 'concerning urls' do
   it "has an url" do
     about_resource.url.should == '/about'
   end
+
+  it "has an url for the website index" do
+    index_resource.url.should == '/'
+  end
 end

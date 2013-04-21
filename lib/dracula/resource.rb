@@ -53,7 +53,8 @@ module Dracula
     end
 
     def url
-      "/#{output_directory.relative_path_from(output_root_directory)}"
+      url = "/#{output_directory.relative_path_from(output_root_directory)}"
+      url =~ /\.$/ ? '/' : url
     end
 
     private 
