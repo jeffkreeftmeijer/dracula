@@ -19,7 +19,8 @@ module Dracula
         split_path[0] = namespace
       end 
 
-      File.join(output_root_directory, split_path || relative_source_directory)
+      path = File.join(output_root_directory, split_path || relative_source_directory)
+      Pathname.new(path)
     end
 
     def output_path
