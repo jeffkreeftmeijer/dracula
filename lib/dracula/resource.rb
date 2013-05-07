@@ -58,6 +58,12 @@ module Dracula
       url =~ /\.$/ ? '/' : url
     end
 
+    def type
+      type = relative_source_directory.to_s.split('/').first
+      return nil if type == '.'
+      type
+    end
+
     private 
 
     def renderer
@@ -75,12 +81,6 @@ module Dracula
 
     def needs_layout?
       output_path.extname == '.html'
-    end
-
-    def type
-      type = relative_source_directory.to_s.split('/').first
-      return nil if type == '.'
-      type
     end
 
     def source_directory
