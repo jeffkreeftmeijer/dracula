@@ -5,11 +5,10 @@ require 'dracula/renderer/erb'
 
 module Dracula
   class Resource
-    attr_writer :binding
-
-    def initialize(source_path, root_path, config = {})
+    def initialize(source_path, root_path, data = {}, config = {})
       @source_path = Pathname.new(source_path)
       @root_path = Pathname.new(root_path)
+      @data = data
       @config = config
     end
 
@@ -66,7 +65,7 @@ module Dracula
       when /markdown$/ 
         Renderer::Markdown
       when /erb$/ 
-        Renderer::ERB.new(@binding)
+        Renderer::ERB.new(@data)
       end
     end
 
