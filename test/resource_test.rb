@@ -115,4 +115,8 @@ describe Dracula::Resource, 'concerning urls' do
   it "has an url for the website index" do
     index_resource.url.should == '/'
   end
+
+  it "has an url for rewritten paths" do
+    article_resource.url.should == '/2013/article'
+  end
 end
