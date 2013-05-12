@@ -1,5 +1,6 @@
 require 'redcarpet'
 require 'pygments'
+require 'cgi'
 
 module Dracula
   module Renderer
@@ -14,7 +15,7 @@ module Dracula
 
       def self.inline_highlight(html)
         html.gsub %r(<pre><code class=\"([^"]*)\">([^<]*)</code></pre>) do
-          Pygments.highlight($2, :lexer => $1)
+          Pygments.highlight(CGI.unescapeHTML($2), :lexer => $1)
         end
       end
     end
