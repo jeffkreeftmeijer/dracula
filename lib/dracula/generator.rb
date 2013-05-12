@@ -5,14 +5,6 @@ module Dracula
   class Generator
     def initialize(root_path)
       @root_path = Pathname.new(root_path)
-
-      config_path = File.join(@root_path, '_config.yml')
-
-      if File.exist? config_path
-        @config = YAML.load_file(config_path)
-      else
-        @config = {}
-      end
     end
 
     def resources
@@ -23,7 +15,7 @@ module Dracula
           path = Pathname(path)
 
           if File.file?(path) && File.basename(path) !~ /^_/ 
-            resource = Resource.new(path, @root_path, @config) 
+            resource = Resource.new(path, @root_path) 
             @resources[resource.type] ||= []
             @resources[resource.type] << resource
           end

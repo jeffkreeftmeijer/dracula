@@ -32,6 +32,6 @@ describe Dracula::Generator, "concerning resources" do
   end
 
   it "does not include underscored files" do
-    @paths[nil].should.not.include File.join(root_path, '_config.yml')
+    @paths[nil].should.not.include File.join(root_path, '_layout.html.erb')
   end
 end

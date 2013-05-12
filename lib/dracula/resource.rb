@@ -7,10 +7,9 @@ module Dracula
   class Resource
     attr_writer :data
 
-    def initialize(source_path, root_path, config = {})
+    def initialize(source_path, root_path)
       @source_path = Pathname.new(source_path)
       @root_path = Pathname.new(root_path)
-      @config = config
     end
 
     def output_directory
