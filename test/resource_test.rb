@@ -10,14 +10,13 @@ def index_resource
 end
 
 def about_resource
-  Dracula::Resource.new(File.join(root_path, 'about/index.html.erb'), root_path, {:foo => 'baz'})
+  Dracula::Resource.new(File.join(root_path, 'about/index.html.erb'), root_path)
 end
 
 def article_resource
   Dracula::Resource.new(
     File.join(root_path, 'articles/2013/article/index.markdown'),
     root_path, 
-    {},
     {'namespaces' => {'articles' => ''}}
   )
 end
@@ -74,7 +73,9 @@ describe Dracula::Resource, 'concerning content' do
   end
 
   it "uses passed variables" do
-    about_resource.content.should.include 'baz'
+    resource = about_resource
+    resource.data = {:foo => 'baz'}
+    resource.content.should.include 'baz'
   end
 
   it "doesn't do formatting for non Markdown or ERB files" do
