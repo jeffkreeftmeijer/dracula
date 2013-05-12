@@ -22,8 +22,8 @@ describe Dracula::Generator, "concerning resources" do
 
   it "finds all resources" do
     @paths[nil].should.include File.join(root_path, 'index.markdown')
-    @paths['about'].should.include File.join(root_path, 'about/index.html.erb')
-    @paths['articles'].should.include File.join(root_path, 'articles/2013/article/index.markdown')
+    @paths[nil].should.include File.join(root_path, 'about/index.html.erb')
+    @paths['articles'].should.include File.join(root_path, '_articles/2013/article/index.markdown')
   end
 
   it "does not include directories" do
