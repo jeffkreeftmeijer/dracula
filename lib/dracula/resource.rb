@@ -60,9 +60,8 @@ module Dracula
     end
 
     def type
-      type = relative_source_directory.to_s.split('/').first
-      return nil if type == '.'
-      type
+      directory_name = relative_source_directory.to_s.split('/').first
+      $1 if directory_name =~ /_(.*)/
     end
 
     private 

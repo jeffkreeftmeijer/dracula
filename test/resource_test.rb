@@ -25,6 +25,16 @@ def stylesheet_resource
   Dracula::Resource.new(File.join(root_path, 'style.css'), root_path)
 end
 
+describe Dracula::Resource, 'concerning special resource types' do
+  it "doesn't have a type" do
+    about_resource.type.should.be.nil
+  end
+
+  it "has a type when in a resource directory" do
+    article_resource.type.should == 'articles'
+  end
+end
+
 describe Dracula::Resource, 'concerning paths' do
   it "has an output directory" do
     about_resource.output_directory.to_s.should == File.join(root_path, '_output/about')
