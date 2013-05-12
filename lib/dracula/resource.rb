@@ -16,9 +16,9 @@ module Dracula
     def output_directory
       return output_root_directory if relative_source_directory.to_s == '.'
 
-      if @config['namespaces'] && namespace = @config['namespaces'][type]
+      if type
         split_path = relative_source_directory.to_s.split('/')
-        split_path[0] = namespace
+        split_path.shift
       end 
 
       path = File.join(output_root_directory, split_path || relative_source_directory)
@@ -47,7 +47,7 @@ module Dracula
       paths = []
 
       if needs_layout?
-        paths << File.join(@root_path, type, '_layout.html.erb') if type
+        paths << File.join(@root_path, "_#{type}", '_layout.html.erb') if type
         paths << File.join(@root_path, '_layout.html.erb')
       end
 

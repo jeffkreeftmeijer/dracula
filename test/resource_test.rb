@@ -15,9 +15,8 @@ end
 
 def article_resource
   Dracula::Resource.new(
-    File.join(root_path, 'articles/2013/article/index.markdown'),
-    root_path, 
-    {'namespaces' => {'articles' => ''}}
+    File.join(root_path, '_articles/2013/article/index.markdown'),
+    root_path
   )
 end
 
@@ -44,7 +43,7 @@ describe Dracula::Resource, 'concerning paths' do
     index_resource.output_directory.to_s.should == File.join(root_path, '_output')
   end
 
-  it "has a output directory that has been overwritten by the settings file" do
+  it "has a output directory for special resources" do
     article_resource.output_directory.to_s.should == File.join(root_path, '_output/2013/article')
   end
 
@@ -99,15 +98,8 @@ describe Dracula::Resource, 'concerning layouts' do
   end
 
   it "has multiple layouts" do
-    about_resource.layouts.map(&:path).should == [
-      File.join(root_path, 'about/_layout.html.erb'),
-      File.join(root_path, '_layout.html.erb')
-    ]
-  end
-
-  it "has a multiple layouts while two directories deep" do
     article_resource.layouts.map(&:path).should == [
-      File.join(root_path, 'articles/_layout.html.erb'),
+      File.join(root_path, '_articles/_layout.html.erb'),
       File.join(root_path, '_layout.html.erb')
     ]
   end
