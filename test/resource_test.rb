@@ -87,6 +87,12 @@ describe Dracula::Resource, 'concerning content' do
     resource.content.should.include 'baz'
   end
 
+  it "uses passed variables in layouts" do
+    resource = article_resource
+    resource.data = {:foo => 'baz'}
+    resource.content.should.include 'baz'
+  end
+
   it "doesn't do formatting for non Markdown or ERB files" do
     stylesheet_resource.content.should.not.include '<p>'
   end

@@ -50,7 +50,7 @@ module Dracula
         paths << File.join(@root_path, '_layout.html.erb')
       end
 
-      paths.map { |path| Layout.new(path) if File.exist? path }.compact
+      paths.map { |path| Layout.new(path, data) if File.exist? path }.compact
     end
 
     def url
