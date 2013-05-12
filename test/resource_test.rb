@@ -128,3 +128,13 @@ describe Dracula::Resource, 'concerning urls' do
     article_resource.url.should == '/2013/article'
   end
 end
+
+describe Dracula::Resource, 'concerning metadata' do
+  it "has an empty metadata hash" do
+    about_resource.metadata.should == {}
+  end
+
+  it "has metadata" do
+    article_resource.metadata.should == {'title' => 'Article'}
+  end
+end

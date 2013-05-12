@@ -63,6 +63,12 @@ module Dracula
       $1 if directory_name =~ /_(.*)/
     end
 
+    def metadata
+      metadata_path
+      return {} unless File.exist?(metadata_path)
+      YAML.load_file(metadata_path)
+    end
+
     private 
 
     def data
@@ -92,6 +98,10 @@ module Dracula
 
     def relative_source_directory
       source_directory.relative_path_from(@root_path)
+    end
+
+    def metadata_path
+      File.join(source_directory, '_metadata.yml')
     end
 
     def output_root_directory
