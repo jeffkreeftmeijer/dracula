@@ -15,4 +15,8 @@ describe Dracula::Renderer::Markdown do
     output.should.include '&#39;foo&#39;'
     output.should.include '&quot;bar&quot;'
   end
+
+  it "automatically urls URLs into links" do
+    Dracula::Renderer::Markdown.render("www.example.com").should == "<p><a href=\"http://www.example.com\">www.example.com</a></p>\n"
+  end
 end

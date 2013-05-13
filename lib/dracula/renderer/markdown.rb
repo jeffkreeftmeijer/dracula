@@ -6,7 +6,11 @@ module Dracula
   module Renderer
     class Markdown
       def self.markdown
-        Redcarpet::Markdown.new(Redcarpet::Render::HTML, :fenced_code_blocks => true)
+        Redcarpet::Markdown.new(
+          Redcarpet::Render::HTML, 
+          :fenced_code_blocks => true,
+          :autolink => true
+        )
       end
 
       def self.render(content)
