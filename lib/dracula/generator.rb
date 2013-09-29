@@ -7,27 +7,40 @@ module Dracula
       @root_path = Pathname.new(root_path)
     end
 
-    def resources
-      unless @resources
-        @resources = {}
+    def find_pages_and_resources
+      @pages = []
+      @resources = {}
 
-        Dir["#{@root_path}/**/*"].each do |path|
-          path = Pathname(path)
+      Dir["#{@root_path}/**/*"].each do |path|
+        path = Pathname(path)
 
-          if File.file?(path) && File.basename(path) !~ /^_/ 
-            resource = Resource.new(path, @root_path) 
+        if File.file?(path) && File.basename(path) !~ /^_/ 
+          resource = Resource.new(path, @root_path) 
+          @pages << resource
+
+          if resource.type
             @resources[resource.type] ||= []
             @resources[resource.type] << resource
           end
         end
       end
+    end
 
+    def pages
+      find_pages_and_resources unless @pages
+      @pages
+    end
+
+    def resources
+      find_pages_and_resources unless @resources
       @resources
     end
 
     def generate
-      resources.values.flatten.each do |resource|
-        resource.data = {:resources => resources}
+      pages.each do |resource|
+        puts resource.instance_variable_get(:@source_path)
+
+        resource.data = resources.merge({:current => resource})
 
         FileUtils.mkdir_p(resource.output_directory)
 
