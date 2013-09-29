@@ -6,7 +6,7 @@ module Dracula
 
     def initialize(path, data = {})
       @path = path
-      @renderer = Dracula::Renderer::ERB.new(data)
+      @data = data
     end
 
     def content
@@ -14,7 +14,7 @@ module Dracula
     end
 
     def render(&block)
-      @renderer.render(content, &block)
+      Dracula::Renderer::ERB.render(content, @data, &block)
     end
   end
 end
