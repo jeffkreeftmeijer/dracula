@@ -33,7 +33,7 @@ module Dracula
     end
 
     def content
-      content = needs_rendering? ? renderer.render(raw_content) : raw_content
+      content = needs_rendering? ? renderer.render(raw_content, data) : raw_content
 
       layouts.each do |layout|
         content = layout.render { content }
@@ -80,7 +80,7 @@ module Dracula
       when /markdown$/ 
         Renderer::Markdown
       when /erb$/ 
-        Renderer::ERB.new(data)
+        Renderer::ERB
       end
     end
 

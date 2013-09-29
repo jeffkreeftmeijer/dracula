@@ -13,7 +13,7 @@ module Dracula
         )
       end
 
-      def self.render(content)
+      def self.render(content, data = {})
         inline_highlight(markdown.render(content))
       end
 
