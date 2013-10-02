@@ -10,6 +10,9 @@ Gem::Specification.new do |spec|
 
   spec.files    = Dir.glob("{lib}/**/*") + %w(README.markdown)
 
+  spec.add_development_dependency('rake')
+  spec.add_development_dependency('peck', '~> 0.5.0')
+
   spec.add_runtime_dependency('pygments.rb', '~> 0.4.2')
   spec.add_runtime_dependency('redcarpet', '~> 2.2.2')
 end
