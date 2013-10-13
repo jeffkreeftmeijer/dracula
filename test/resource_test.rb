@@ -20,6 +20,10 @@ def article_resource
   )
 end
 
+def feed_resource
+  Dracula::Resource.new(File.join(root_path, 'feed.xml.erb'), root_path)
+end
+
 def stylesheet_resource
   Dracula::Resource.new(File.join(root_path, 'style.css'), root_path)
 end
@@ -51,8 +55,12 @@ describe Dracula::Resource, 'concerning paths' do
     index_resource.output_path.to_s.should == File.join(root_path, '_output/index.html')
   end
 
-  it "has an output path with an html extension for ERB files" do
+  it "has an output path with an html extension for ERB HTML files" do
     about_resource.output_path.to_s.should == File.join(root_path, '_output/about/index.html')
+  end
+
+  it "has an output path with an xml extension for ERB XML files" do
+    feed_resource.output_path.to_s.should == File.join(root_path, '_output/feed.xml')
   end
 
   it "has an output path for files that don't need formatting" do

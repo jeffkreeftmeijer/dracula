@@ -100,6 +100,10 @@ module Dracula
       source_directory.relative_path_from(@root_path)
     end
 
+    def source_extname
+      @source_path.to_s[/\..+/]
+    end
+
     def metadata_path
       File.join(source_directory, '_metadata.yml')
     end
@@ -110,7 +114,14 @@ module Dracula
 
     def output_basename
       basename = @source_path.basename.to_s
-      basename.gsub!(/\.(.*)/, '.html') if needs_rendering?
+
+      case source_extname
+      when /markdown$/
+        basename.gsub!(/\..+/, '.html')
+      when /erb$/
+        basename.gsub!(/\.[^.]+$/, '')
+      end
+
       basename
     end
   end
