@@ -32,11 +32,13 @@ module Dracula
       File.read(@source_path)
     end
 
-    def content
+    def content(options = {layout: true})
       content = needs_rendering? ? renderer.render(raw_content, data) : raw_content
 
-      layouts.each do |layout|
-        content = layout.render { content }
+      if options[:layout]
+        layouts.each do |layout|
+          content = layout.render { content }
+        end
       end
 
       content 

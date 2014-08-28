@@ -81,6 +81,10 @@ describe Dracula::Resource, 'concerning content' do
     stylesheet_resource.content.should.not.include 'Header'
   end
 
+  it "doesn't use layouts when asked to" do
+    index_resource.content(layout: false).should.not.include 'Header'
+  end
+
   it "uses Markdown formatting" do
     index_resource.content.should.include '<h2>Welcome</h2>'
   end
