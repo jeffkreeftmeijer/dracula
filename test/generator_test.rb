@@ -40,4 +40,8 @@ describe Dracula::Generator, "concerning finding pages and resources" do
   it "does not include underscored files" do
     @paths.should.not.include File.join(root_path, '_layout.html.erb')
   end
+
+  it "does not include files listed in the .gitignore file" do
+    @paths.should.not.include File.join(root_path, 'IGNORE_ME')
+  end
 end

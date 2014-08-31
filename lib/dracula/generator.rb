@@ -11,7 +11,14 @@ module Dracula
       @pages = []
       @resources = {}
 
-      Dir["#{@root_path}/**/*"].each do |path|
+      paths = Rake::FileList["#{root_path}/**/*"]
+
+      if File.exists?(gitignore = "#{root_path}/.gitignore")
+        ignore = File.read(gitignore).split
+        paths.exclude(*ignore.map { |path| "#{root_path}/#{path}" })
+      end
+
+      paths.each do |path|
         path = Pathname(path)
 
         if File.file?(path) && File.basename(path) !~ /^_/ 
