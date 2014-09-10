@@ -28,6 +28,10 @@ def stylesheet_resource
   Dracula::Resource.new(File.join(root_path, 'style.css'), root_path)
 end
 
+def no_layout_resource
+  Dracula::Resource.new(File.join(root_path, 'nolayout/index.markdown'), root_path)
+end
+
 describe Dracula::Resource, 'concerning special resource types' do
   it "doesn't have a type" do
     about_resource.type.should.be.nil
@@ -83,6 +87,10 @@ describe Dracula::Resource, 'concerning content' do
 
   it "doesn't use layouts when asked to" do
     index_resource.content(layout: false).should.not.include 'Header'
+  end
+
+  it "doesn't use layouts when they're disabled in the resource's metadata" do
+    no_layout_resource.content.should.not.include 'Header'
   end
 
   it "uses Markdown formatting" do

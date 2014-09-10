@@ -1,4 +1,5 @@
 require 'pathname'
+require 'yaml'
 require 'dracula/layout'
 require 'dracula/renderer/markdown'
 require 'dracula/renderer/erb'
@@ -34,6 +35,7 @@ module Dracula
 
     def content(options = {layout: true})
       content = needs_rendering? ? renderer.render(raw_content, data) : raw_content
+      options.merge!(Hash[metadata.map {|k,v| [k.to_sym, v]}])
 
       if options[:layout]
         layouts.each do |layout|
