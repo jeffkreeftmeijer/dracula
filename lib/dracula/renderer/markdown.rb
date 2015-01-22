@@ -9,7 +9,8 @@ module Dracula
         Redcarpet::Markdown.new(
           Redcarpet::Render::HTML, 
           :fenced_code_blocks => true,
-          :autolink => true
+          :autolink => true,
+          :footnotes => true
         )
       end
 
