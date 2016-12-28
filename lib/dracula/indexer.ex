@@ -16,15 +16,16 @@ defmodule Dracula.Indexer do
   directory, and is built using the split directory path and the file's
   basename.
   * "path" is the file's output path, relative from the output directory and
-  prefixed with a / to be used to link between files.
+  prefixed with a / to be used to link between files on a web server. If the
+  filename is index.html, it gets stripped from the end of the path.
 
-    iex> Dracula.Indexer.index([{[], "index.html"}])
+    iex> Dracula.Indexer.index([{[], "foo.html"}])
     {:ok, [
       %{
         "directory" => [],
-        "input_path" => "index.html",
-        "output_path" => "_output/index.html",
-        "path" => "/index.html"
+        "input_path" => "foo.html",
+        "output_path" => "_output/foo.html",
+        "path" => "/foo.html"
       }
     ]}
 
@@ -34,7 +35,7 @@ defmodule Dracula.Indexer do
         "directory" => ["about"],
         "input_path" => "about/index.html",
         "output_path" => "_output/about/index.html",
-        "path" => "/about/index.html"
+        "path" => "/about/"
       }
     ]}
 
@@ -48,7 +49,7 @@ defmodule Dracula.Indexer do
         "directory" => [],
         "input_path" => "path/to/file/index.html",
         "output_path" => "_output/index.html",
-        "path" => "/index.html"
+        "path" => "/"
       }
     ]}
   """
@@ -58,16 +59,24 @@ defmodule Dracula.Indexer do
       %{
         "directory" => directory,
         "input_path" => input_path,
-        "output_path" => Path.join("_output", relative_input_path(resource)),
-        "path" => "/#{relative_input_path(resource)}"
+        "output_path" => output_path(resource),
+        "path" => path(resource)
       }
     end)
 
     {:ok, index}
   end
 
-  defp relative_input_path({[], path}), do: Path.basename(path)
-  defp relative_input_path({[directory|tail], path}) do
-    Path.join(directory, relative_input_path({tail, path}))
+  defp path(resource) do
+    "/#{relative_path(resource)}" |> String.replace_trailing("index.html", "")
+  end
+
+  defp output_path(resource) do
+    Path.join("_output", relative_path(resource))
+  end
+
+  defp relative_path({[], path}), do: Path.basename(path)
+  defp relative_path({[directory|tail], path}) do
+    Path.join(directory, relative_path({tail, path}))
   end
 end
