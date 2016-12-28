@@ -4,15 +4,15 @@ defmodule Dracula.Indexer do
 
   ## Examples
     iex> Dracula.Indexer.index([{[], "index.html"}])
-    {:ok, [%{"directory" => [], "path" => "index.html"}]}
+    {:ok, [%{"directory" => [], "input_path" => "index.html"}]}
 
     iex> Dracula.Indexer.index([{["about"], "about/index.html"}])
-    {:ok, [%{"directory" => ["about"], "path" => "about/index.html"}]}
+    {:ok, [%{"directory" => ["about"], "input_path" => "about/index.html"}]}
   """
   def index(resources) do
     index = resources
-    |> Enum.map(fn({directory, path}) ->
-      %{"directory" => directory, "path" => path}
+    |> Enum.map(fn({directory, input_path}) ->
+      %{"directory" => directory, "input_path" => input_path}
     end)
 
     {:ok, index}
