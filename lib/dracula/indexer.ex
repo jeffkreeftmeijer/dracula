@@ -155,17 +155,17 @@ defmodule Dracula.Indexer do
     end
   end
 
-  defp layouts(resources, {search_directory, target_path, _}) do
-    layout = if layoutable?(target_path) do
-      resources |> Enum.find(fn({directory, path, _}) ->
-        directory == search_directory && Path.basename(path) == "_layout.liquid"
-      end)
+  defp layouts(resources, {directory, target_path, _}) do
+    case [layoutable?(target_path) && layout_for(resources, directory)] do
+      [{_, _, contents}] -> [contents]
+      _ -> []
     end
+  end
 
-    case layout do
-      {_, _, contents} -> [contents]
-      nil -> []
-    end
+  defp layout_for(resources, search_directory) do
+    resources |> Enum.find(fn({directory, path, _}) ->
+      directory == search_directory && Path.basename(path) == "_layout.liquid"
+    end)
   end
 
   defp layoutable?(path) do
