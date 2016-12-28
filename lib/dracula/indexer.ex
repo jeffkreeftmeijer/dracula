@@ -57,6 +57,20 @@ defmodule Dracula.Indexer do
         "contents" => "<!-- index.html -->"
       }
     ]}
+
+  Given a Markdown file resource, both the path and output path are rewritten to
+  use ".html" as its extension instead of ".md".
+
+    iex> Dracula.Indexer.index([{[], "foo.md", "<!-- foo.md -->"}])
+    {:ok, [
+      %{
+        "directory" => [],
+        "input_path" => "foo.md",
+        "output_path" => "_output/foo.html",
+        "path" => "/foo.html",
+        "contents" => "<!-- foo.md -->"
+      }
+    ]}
   """
   def index(resources) do
     index = resources
@@ -81,11 +95,22 @@ defmodule Dracula.Indexer do
     Path.join("_output", relative_path(resource))
   end
 
-  defp relative_path({[], path}), do: Path.basename(path)
+  defp relative_path({[], path}) do
+    path
+    |> Path.basename
+    |> with_output_extension
+  end
   defp relative_path({[directory|tail], path}) do
     Path.join(directory, relative_path({tail, path}))
   end
   defp relative_path({directories, path, _contents}) do
     relative_path({directories, path})
+  end
+
+  defp with_output_extension(filename) do
+    case Path.extname(filename) do
+      ".md" -> String.replace_trailing(filename, ".md", ".html")
+      _ -> filename
+    end
   end
 end
