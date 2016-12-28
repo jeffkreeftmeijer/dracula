@@ -63,8 +63,8 @@ defmodule Dracula.Indexer do
       }
     ]}
 
-  Given a Markdown file resource, both the path and output path are rewritten to
-  use ".html" as its extension instead of ".md".
+  Given a Markdown or Liquid file resource, both the path and output path are
+  rewritten to use ".html" as its extension instead of ".md" or ".liquid"
 
     iex> Dracula.Indexer.index([{[], "foo.md", "<!-- foo.md -->"}])
     {:ok, [
@@ -74,6 +74,18 @@ defmodule Dracula.Indexer do
         "output_path" => "_output/foo.html",
         "path" => "/foo.html",
         "contents" => "<!-- foo.md -->",
+        "layouts" => []
+      }
+    ]}
+
+    iex> Dracula.Indexer.index([{[], "foo.liquid", "{% comment %}\nfoo.liquid\n{% endcomment %}"}])
+    {:ok, [
+      %{
+        "directory" => [],
+        "input_path" => "foo.liquid",
+        "output_path" => "_output/foo.html",
+        "path" => "/foo.html",
+        "contents" => "{% comment %}\nfoo.liquid\n{% endcomment %}",
         "layouts" => []
       }
     ]}
@@ -169,6 +181,7 @@ defmodule Dracula.Indexer do
 
   defp with_output_extension(filename) do
     case Path.extname(filename) do
+      ".liquid" -> String.replace_trailing(filename, ".liquid", ".html")
       ".md" -> String.replace_trailing(filename, ".md", ".html")
       _ -> filename
     end
