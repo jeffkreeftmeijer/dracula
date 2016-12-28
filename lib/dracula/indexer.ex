@@ -8,18 +8,18 @@ defmodule Dracula.Indexer do
   resource. Each map has the following keys:
 
   * "directory" is the split directory path, relative from the root directory
-  (like `["path", "to", "file"]` or ["about"]), and is copied from each file
-  resource tuple.
+    (like `["path", "to", "file"]` or ["about"]), and is copied from each file
+    resource tuple.
   * "input_path" is the path to the file, relative from the current working
-  directory, and is copied from each file resource tuple.
+    directory, and is copied from each file resource tuple.
   * "output_path" is the file's output path, relative from the current working
-  directory, and is built using the split directory path and the file's
-  basename.
+    directory, and is built using the split directory path and the file's
+    basename.
   * "path" is the file's output path, relative from the output directory and
-  prefixed with a / to be used to link between files on a web server. If the
-  filename is index.html, it gets stripped from the end of the path.
+    prefixed with a / to be used to link between files on a web server. If the
+    filename is index.html, it gets stripped from the end of the path.
   * "contents" are the file's contents, and they're copied from each file
-  resource tuple.
+    resource tuple.
 
     iex> Dracula.Indexer.index([{[], "foo.html", "<!-- foo.html -->"}])
     {:ok, [
@@ -43,9 +43,9 @@ defmodule Dracula.Indexer do
       }
     ]}
 
-    The path in the resource tuples is relative from the current working
-    directory, so the output_path gets built using the split directory path (
-    which is the path to the file's directory, relative from the root path)
+  The path in the resource tuples is relative from the current working
+  directory, so the output_path gets built using the split directory path (
+  which is the path to the file's directory, relative from the root path)
 
     iex> Dracula.Indexer.index([{[], "path/to/file/index.html", "<!-- index.html -->"}])
     {:ok, [
