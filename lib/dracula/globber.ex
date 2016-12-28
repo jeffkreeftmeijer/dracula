@@ -12,10 +12,16 @@ defmodule Dracula.Globber do
 
     iex> Dracula.Globber.glob("test/fixtures/single_file")
     {:ok, [{[], "test/fixtures/single_file/index.html"}]}
+
+  When the file is in a subdirectory, the list in the tuple holds the
+  directory's name.
+
+    iex> Dracula.Globber.glob("test/fixtures/file_in_subdirectory")
+    {:ok, [{["sub"], "test/fixtures/file_in_subdirectory/sub/index.html"}]}
   """
   def glob(root) do
     resources = root
-    |> Path.join("*")
+    |> Path.join("**/*")
     |> Path.wildcard
     |> to_resources_from(root)
 
@@ -24,6 +30,23 @@ defmodule Dracula.Globber do
 
   defp to_resources_from([], _root), do: []
   defp to_resources_from([head|tail], root) do
-    [{[], head}|to_resources_from(tail, root)]
+    case File.dir?(head) do
+      true -> to_resources_from(tail, root)
+      false -> [
+        {subdirectory_split_from(head, root), head}
+        |to_resources_from(tail, root)
+      ]
+    end
+  end
+
+  defp subdirectory_split_from(path, root) do
+    relative_path = path
+    |> Path.dirname
+    |> Path.relative_to(root)
+
+    case relative_path == root do
+      false -> relative_path |> Path.split
+      true -> []
+    end
   end
 end
