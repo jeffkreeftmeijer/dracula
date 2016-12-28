@@ -18,24 +18,28 @@ defmodule Dracula.Indexer do
   * "path" is the file's output path, relative from the output directory and
   prefixed with a / to be used to link between files on a web server. If the
   filename is index.html, it gets stripped from the end of the path.
+  * "contents" are the file's contents, and they're copied from each file
+  resource tuple.
 
-    iex> Dracula.Indexer.index([{[], "foo.html"}])
+    iex> Dracula.Indexer.index([{[], "foo.html", "<!-- foo.html -->"}])
     {:ok, [
       %{
         "directory" => [],
         "input_path" => "foo.html",
         "output_path" => "_output/foo.html",
-        "path" => "/foo.html"
+        "path" => "/foo.html",
+        "contents" => "<!-- foo.html -->"
       }
     ]}
 
-    iex> Dracula.Indexer.index([{["about"], "about/index.html"}])
+    iex> Dracula.Indexer.index([{["about"], "about/index.html", "<!-- about/index.html -->"}])
     {:ok, [
       %{
         "directory" => ["about"],
         "input_path" => "about/index.html",
         "output_path" => "_output/about/index.html",
-        "path" => "/about/"
+        "path" => "/about/",
+        "contents" => "<!-- about/index.html -->"
       }
     ]}
 
@@ -43,24 +47,26 @@ defmodule Dracula.Indexer do
     directory, so the output_path gets built using the split directory path (
     which is the path to the file's directory, relative from the root path)
 
-    iex> Dracula.Indexer.index([{[], "path/to/file/index.html"}])
+    iex> Dracula.Indexer.index([{[], "path/to/file/index.html", "<!-- index.html -->"}])
     {:ok, [
       %{
         "directory" => [],
         "input_path" => "path/to/file/index.html",
         "output_path" => "_output/index.html",
-        "path" => "/"
+        "path" => "/",
+        "contents" => "<!-- index.html -->"
       }
     ]}
   """
   def index(resources) do
     index = resources
-    |> Enum.map(fn({directory, input_path} = resource) ->
+    |> Enum.map(fn({directory, input_path, contents} = resource) ->
       %{
         "directory" => directory,
         "input_path" => input_path,
         "output_path" => output_path(resource),
-        "path" => path(resource)
+        "path" => path(resource),
+        "contents" => contents
       }
     end)
 
@@ -78,5 +84,8 @@ defmodule Dracula.Indexer do
   defp relative_path({[], path}), do: Path.basename(path)
   defp relative_path({[directory|tail], path}) do
     Path.join(directory, relative_path({tail, path}))
+  end
+  defp relative_path({directories, path, _contents}) do
+    relative_path({directories, path})
   end
 end
