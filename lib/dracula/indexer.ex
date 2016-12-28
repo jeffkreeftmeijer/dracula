@@ -15,13 +15,16 @@ defmodule Dracula.Indexer do
   * "output_path" is the file's output path, relative from the current working
   directory, and is built using the split directory path and the file's
   basename.
+  * "path" is the file's output path, relative from the output directory and
+  prefixed with a / to be used to link between files.
 
     iex> Dracula.Indexer.index([{[], "index.html"}])
     {:ok, [
       %{
         "directory" => [],
         "input_path" => "index.html",
-        "output_path" => "_output/index.html"
+        "output_path" => "_output/index.html",
+        "path" => "/index.html"
       }
     ]}
 
@@ -30,7 +33,8 @@ defmodule Dracula.Indexer do
       %{
         "directory" => ["about"],
         "input_path" => "about/index.html",
-        "output_path" => "_output/about/index.html"
+        "output_path" => "_output/about/index.html",
+        "path" => "/about/index.html"
       }
     ]}
 
@@ -43,7 +47,8 @@ defmodule Dracula.Indexer do
       %{
         "directory" => [],
         "input_path" => "path/to/file/index.html",
-        "output_path" => "_output/index.html"
+        "output_path" => "_output/index.html",
+        "path" => "/index.html"
       }
     ]}
   """
@@ -53,7 +58,8 @@ defmodule Dracula.Indexer do
       %{
         "directory" => directory,
         "input_path" => input_path,
-        "output_path" => Path.join("_output", relative_input_path(resource))
+        "output_path" => Path.join("_output", relative_input_path(resource)),
+        "path" => "/#{relative_input_path(resource)}"
       }
     end)
 
