@@ -192,10 +192,10 @@ defmodule Dracula.Indexer do
   end
 
   defp with_output_extension(filename) do
-    case Path.extname(filename) do
-      ".liquid" -> String.replace_trailing(filename, ".liquid", ".html")
-      ".md" -> String.replace_trailing(filename, ".md", ".html")
-      _ -> filename
+    extname = Path.extname(filename)
+    case Enum.member?(~w(.liquid .md), extname) do
+      true -> filename |> String.replace_trailing(extname, ".html")
+      false -> filename
     end
   end
 
