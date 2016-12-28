@@ -105,6 +105,18 @@ defmodule Dracula.Indexer do
       }
     ]}
 
+    iex> Dracula.Indexer.index([{[], "index.liquid", "{% comment %}\nindex.liquid\n{% endcomment %}"}, {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"} ])
+    {:ok, [
+      %{
+        "directory" => [],
+        "input_path" => "index.liquid",
+        "output_path" => "_output/index.html",
+        "path" => "/",
+        "contents" => "{% comment %}\nindex.liquid\n{% endcomment %}",
+        "layouts" => ["{% comment %}\n_layout.liquid\n{% endcomment %}"]
+      }
+    ]}
+
   If the file is in a subdirectory with a file named `_layout.liquid`, and the
   directory above has a `_layout.liquid` file as well, both get included in the
   "layouts" item, up to the root.
@@ -208,6 +220,6 @@ defmodule Dracula.Indexer do
   end
 
   defp layoutable?(path) do
-    Path.extname(path) == ".md"
+    ~w(.md .liquid) |> Enum.member?(Path.extname(path))
   end
 end
