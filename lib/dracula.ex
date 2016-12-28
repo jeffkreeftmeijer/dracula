@@ -1,0 +1,2 @@
+defmodule Dracula do
+end
