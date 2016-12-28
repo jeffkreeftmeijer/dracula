@@ -20,6 +20,8 @@ defmodule Dracula.Indexer do
     filename is index.html, it gets stripped from the end of the path.
   * "contents" are the file's contents, and they're copied from each file
     resource tuple.
+  * "layouts" are the contents of each layout file from the file's directory, up
+    to the root directory, if present
 
     iex> Dracula.Indexer.index([{[], "foo.html", "<!-- foo.html -->"}])
     {:ok, [
@@ -28,7 +30,8 @@ defmodule Dracula.Indexer do
         "input_path" => "foo.html",
         "output_path" => "_output/foo.html",
         "path" => "/foo.html",
-        "contents" => "<!-- foo.html -->"
+        "contents" => "<!-- foo.html -->",
+        "layouts" => []
       }
     ]}
 
@@ -39,7 +42,8 @@ defmodule Dracula.Indexer do
         "input_path" => "about/index.html",
         "output_path" => "_output/about/index.html",
         "path" => "/about/",
-        "contents" => "<!-- about/index.html -->"
+        "contents" => "<!-- about/index.html -->",
+        "layouts" => []
       }
     ]}
 
@@ -54,7 +58,8 @@ defmodule Dracula.Indexer do
         "input_path" => "path/to/file/index.html",
         "output_path" => "_output/index.html",
         "path" => "/",
-        "contents" => "<!-- index.html -->"
+        "contents" => "<!-- index.html -->",
+        "layouts" => []
       }
     ]}
 
@@ -68,19 +73,39 @@ defmodule Dracula.Indexer do
         "input_path" => "foo.md",
         "output_path" => "_output/foo.html",
         "path" => "/foo.html",
-        "contents" => "<!-- foo.md -->"
+        "contents" => "<!-- foo.md -->",
+        "layouts" => []
+      }
+    ]}
+
+  If there's a file named `_layout.liquid` in the same directory as the
+  resource, its contents get included in the "layouts" item.
+
+    iex> Dracula.Indexer.index([{[], "index.md", "<!-- index.md -->"}, {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"} ])
+    {:ok, [
+      %{
+        "directory" => [],
+        "input_path" => "index.md",
+        "output_path" => "_output/index.html",
+        "path" => "/",
+        "contents" => "<!-- index.md -->",
+        "layouts" => ["{% comment %}\n_layout.liquid\n{% endcomment %}"]
       }
     ]}
   """
   def index(resources) do
     index = resources
+    |> Enum.filter(fn({_, input_path, _}) ->
+      !(input_path |> Path.basename |> String.starts_with?("_"))
+    end)
     |> Enum.map(fn({directory, input_path, contents} = resource) ->
       %{
         "directory" => directory,
         "input_path" => input_path,
         "output_path" => output_path(resource),
         "path" => path(resource),
-        "contents" => contents
+        "contents" => contents,
+        "layouts" => layouts(resources, directory)
       }
     end)
 
@@ -111,6 +136,17 @@ defmodule Dracula.Indexer do
     case Path.extname(filename) do
       ".md" -> String.replace_trailing(filename, ".md", ".html")
       _ -> filename
+    end
+  end
+
+  defp layouts(resources, search_directory) do
+    resource = resources |> Enum.find(fn({directory, path, _}) ->
+      directory == search_directory && Path.basename(path) == "_layout.liquid"
+    end)
+
+    case resource do
+      {_, _, contents} -> [contents]
+      nil -> []
     end
   end
 end
