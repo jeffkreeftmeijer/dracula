@@ -1,23 +1,32 @@
 defmodule Dracula.Globber do
   @doc ~S"""
-  Globs all files in the given `root` into a list of tuples which contain the
-  file's directory path (relative from the root path) in a split list, and the
-  filename (relative to the current working directory).
+  Globs all files in the given `root` into a list of tuples which contain:
+
+  * the file's directory path (relative from the root path), in a split list.
+  * the file's path (relative to the current working directory).
+  * the file's contents.
 
   ## Examples
 
   With a single file, `glob/1` returns a list with a single tuple. Since this
-  file is in the root path, the list in the tuple is empty. The string in the
-  tuple holds the relative path to the file, from the current working directory.
+  file is in the root path, the directory path list in the tuple is empty.
 
     iex> Dracula.Globber.glob("test/fixtures/single_file")
-    {:ok, [{[], "test/fixtures/single_file/index.html"}]}
+    {:ok, [{
+      [],
+      "test/fixtures/single_file/index.html",
+      "<!-- single_file/index.html -->\n"
+    }]}
 
-  When the file is in a subdirectory, the list in the tuple holds the
+  When the file is in a subdirectory, the directory list in the tuple holds the
   directory's name.
 
     iex> Dracula.Globber.glob("test/fixtures/file_in_subdirectory")
-    {:ok, [{["sub"], "test/fixtures/file_in_subdirectory/sub/index.html"}]}
+    {:ok, [{
+      ["sub"],
+      "test/fixtures/file_in_subdirectory/sub/index.html",
+      "<!-- file_in_subdirectory/sub/index.html -->\n"
+    }]}
   """
   def glob(root) do
     {:ok, glob(root, root)}
@@ -36,7 +45,7 @@ defmodule Dracula.Globber do
       true ->
         glob(head, root) ++ to_resources_from(tail, root)
       false -> [
-        {subdirectory_split_from(head, root), head}
+        {subdirectory_split_from(head, root), head, File.read!(head)}
         |to_resources_from(tail, root)
       ]
     end
