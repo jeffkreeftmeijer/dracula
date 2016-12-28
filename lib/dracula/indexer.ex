@@ -21,7 +21,7 @@ defmodule Dracula.Indexer do
   * "contents" are the file's contents, and they're copied from each file
     resource tuple.
   * "layouts" are the contents of each layout file from the file's directory, up
-    to the root directory, if present
+    to the root directory, if present.
 
     iex> Dracula.Indexer.index([{[], "foo.html", "<!-- foo.html -->"}])
     {:ok, [
@@ -93,6 +93,25 @@ defmodule Dracula.Indexer do
       }
     ]}
 
+  If the file is in a subdirectory with a file named `_layout.liquid`, and the
+  directory above has a `_layout.liquid` file as well, both get included in the
+  "layouts" item, up to the root.
+
+    iex> Dracula.Indexer.index([{["sub"], "sub/index.md", "<!-- sub/index.md -->"}, {["sub"], "_layout.liquid", "{% comment %}\nsub/_layout.liquid\n{% endcomment %}"}, {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"} ])
+    {:ok, [
+      %{
+        "directory" => ["sub"],
+        "input_path" => "sub/index.md",
+        "output_path" => "_output/sub/index.html",
+        "path" => "/sub/",
+        "contents" => "<!-- sub/index.md -->",
+        "layouts" => [
+          "{% comment %}\nsub/_layout.liquid\n{% endcomment %}",
+          "{% comment %}\n_layout.liquid\n{% endcomment %}"
+        ]
+      }
+    ]}
+
   Layouts are only loaded for Markdown files, so HTML files will always have an
   empty "layouts" item, even if there's a `_layout.liquid` file present in their
   input directories.
@@ -121,7 +140,7 @@ defmodule Dracula.Indexer do
         "output_path" => output_path(resource),
         "path" => path(resource),
         "contents" => contents,
-        "layouts" => layouts(resources, resource)
+        "layouts" => layouts(resources, directory, input_path)
       }
     end)
 
@@ -155,10 +174,17 @@ defmodule Dracula.Indexer do
     end
   end
 
-  defp layouts(resources, {directory, target_path, _}) do
-    case [layoutable?(target_path) && layout_for(resources, directory)] do
+  defp layouts(resources, [], target_path) do
+    case [layoutable?(target_path) && layout_for(resources, [])] do
       [{_, _, contents}] -> [contents]
       _ -> []
+    end
+  end
+  defp layouts(resources, directory, target_path) do
+    parent_layouts = layouts(resources, directory |> Enum.drop(-1), target_path)
+    case [layoutable?(target_path) && layout_for(resources, directory)] do
+      [{_, _, contents}] -> [contents|parent_layouts]
+      _ -> parent_layouts
     end
   end
 
