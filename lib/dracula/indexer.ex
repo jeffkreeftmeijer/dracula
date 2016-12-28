@@ -92,6 +92,22 @@ defmodule Dracula.Indexer do
         "layouts" => ["{% comment %}\n_layout.liquid\n{% endcomment %}"]
       }
     ]}
+
+  Layouts are only loaded for Markdown files, so HTML files will always have an
+  empty "layouts" item, even if there's a `_layout.liquid` file present in their
+  input directories.
+
+    iex> Dracula.Indexer.index([{[], "index.html", "<!-- index.html -->"}, {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"} ])
+    {:ok, [
+      %{
+        "directory" => [],
+        "input_path" => "index.html",
+        "output_path" => "_output/index.html",
+        "path" => "/",
+        "contents" => "<!-- index.html -->",
+        "layouts" => []
+      }
+    ]}
   """
   def index(resources) do
     index = resources
@@ -105,7 +121,7 @@ defmodule Dracula.Indexer do
         "output_path" => output_path(resource),
         "path" => path(resource),
         "contents" => contents,
-        "layouts" => layouts(resources, directory)
+        "layouts" => layouts(resources, resource)
       }
     end)
 
@@ -139,14 +155,20 @@ defmodule Dracula.Indexer do
     end
   end
 
-  defp layouts(resources, search_directory) do
-    resource = resources |> Enum.find(fn({directory, path, _}) ->
-      directory == search_directory && Path.basename(path) == "_layout.liquid"
-    end)
+  defp layouts(resources, {search_directory, target_path, _}) do
+    layout = if layoutable?(target_path) do
+      resources |> Enum.find(fn({directory, path, _}) ->
+        directory == search_directory && Path.basename(path) == "_layout.liquid"
+      end)
+    end
 
-    case resource do
+    case layout do
       {_, _, contents} -> [contents]
       nil -> []
     end
+  end
+
+  defp layoutable?(path) do
+    Path.extname(path) == ".md"
   end
 end
