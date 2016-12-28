@@ -20,18 +20,21 @@ defmodule Dracula.Globber do
     {:ok, [{["sub"], "test/fixtures/file_in_subdirectory/sub/index.html"}]}
   """
   def glob(root) do
-    resources = root
-    |> Path.join("**/*")
+    {:ok, glob(root, root)}
+  end
+
+  defp glob(starting_path, root) do
+    starting_path
+    |> Path.join("*")
     |> Path.wildcard
     |> to_resources_from(root)
-
-    {:ok, resources}
   end
 
   defp to_resources_from([], _root), do: []
   defp to_resources_from([head|tail], root) do
     case File.dir?(head) do
-      true -> to_resources_from(tail, root)
+      true ->
+        glob(head, root) ++ to_resources_from(tail, root)
       false -> [
         {subdirectory_split_from(head, root), head}
         |to_resources_from(tail, root)
