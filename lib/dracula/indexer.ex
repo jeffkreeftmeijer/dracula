@@ -167,6 +167,25 @@ defmodule Dracula.Indexer do
         "title" => "The index"
       }
     ]}
+
+  Like with layouts, metadata files in parent directories are included as well.
+  If the file is in a subdirectory with a `_metadata.yml` file, and the
+  directory above has one as well, both get merged into one. The metadata file
+  closest to the resource overwrites its parents.
+
+    iex> Dracula.Indexer.index([{["sub"], "sub/index.md", "<!-- sub/index.md -->"}, {["sub"], "_metadata.yml", "title: The subdirectory"}, {[], "_metadata.yml", "title: The index\ndescription: A description"}])
+    {:ok, [
+      %{
+        "directory" => ["sub"],
+        "input_path" => "sub/index.md",
+        "output_path" => "_output/sub/index.html",
+        "path" => "/sub/",
+        "contents" => "<!-- sub/index.md -->",
+        "layouts" => [],
+        "title" => "The subdirectory",
+        "description" => "A description"
+      }
+    ]}
   """
   def index(resources) do
     index = resources
@@ -240,12 +259,21 @@ defmodule Dracula.Indexer do
     ~w(.md .liquid) |> Enum.member?(Path.extname(path))
   end
 
-  defp metadata(resources, directory) do
-    case metadata_for(resources, directory) do
+  defp metadata(resources, []) do
+    case metadata_for(resources, []) do
       {_, _, contents} ->
         {:ok, metadata} = Dracula.YAML.to_map(contents)
         metadata
       _ -> %{}
+    end
+  end
+  defp metadata(resources, directory) do
+    parent_metadata = metadata(resources, directory |> Enum.drop(-1))
+    case metadata_for(resources, directory) do
+      {_, _, contents} ->
+        {:ok, metadata} = Dracula.YAML.to_map(contents)
+        Map.merge(parent_metadata, metadata)
+      _ -> parent_metadata
     end
   end
 
