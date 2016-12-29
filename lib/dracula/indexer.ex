@@ -186,6 +186,21 @@ defmodule Dracula.Indexer do
         "description" => "A description"
       }
     ]}
+
+  Subresources are resources in directories with an underscore. These
+  underscored directories get removed from the output path.
+
+    iex> Dracula.Indexer.index([{["_about"], "_about/index.html", "<!-- _about/index.html -->"}])
+    {:ok, [
+      %{
+        "directory" => ["_about"],
+        "input_path" => "_about/index.html",
+        "output_path" => "_output/index.html",
+        "path" => "/",
+        "contents" => "<!-- _about/index.html -->",
+        "layouts" => []
+      }
+    ]}
   """
   def index(resources) do
     index = resources
@@ -221,7 +236,10 @@ defmodule Dracula.Indexer do
     |> with_output_extension
   end
   defp relative_path({[directory|tail], path}) do
-    Path.join(directory, relative_path({tail, path}))
+    case String.starts_with?(directory, "_") do
+      false -> Path.join(directory, relative_path({tail, path}))
+      true -> relative_path({tail, path})
+    end
   end
   defp relative_path({directories, path, _contents}) do
     relative_path({directories, path})
