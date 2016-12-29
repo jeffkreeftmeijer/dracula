@@ -7,6 +7,9 @@ defmodule Dracula.YAML do
 
     iex> Dracula.YAML.to_map("title: A YAML file")
     {:ok, %{"title" => "A YAML file"}}
+
+    iex> Dracula.YAML.to_map("sub:\n  title: A YAML file")
+    {:ok, %{"sub" => %{"title" => "A YAML file"}}}
   """
   def to_map(yaml) do
     :application.start(:yamerl)
@@ -14,10 +17,14 @@ defmodule Dracula.YAML do
     map = yaml
     |> :yamerl_constr.string
     |> List.first
-    |> Enum.into(%{}, fn({key, value}) ->
-      {to_string(key), to_string(value)}
-    end)
+    |> Enum.into(%{}, &to_strings/1)
 
     {:ok, map}
   end
+
+  def to_strings([{key, value}]) do
+    [to_strings({key, value})] |> Enum.into(%{})
+  end
+  def to_strings({key, value}), do: {to_string(key), to_strings(value)}
+  def to_strings(value) when is_list(value), do: to_string(value)
 end
