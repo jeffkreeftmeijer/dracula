@@ -201,25 +201,61 @@ defmodule Dracula.Indexer do
         "layouts" => []
       }
     ]}
+
+  Subresources get duplicated into their parents' resources, to allow
+  referencing subresources in template files.
+
+    iex> Dracula.Indexer.index([{[], "index.html", "<!-- index.html -->"}, {["_articles", "article"], "_articles/article/index.html", "<!-- _articles/article/index.html -->"} ])
+    {:ok, [
+      %{
+        "directory" => [],
+        "input_path" => "index.html",
+        "output_path" => "_output/index.html",
+        "path" => "/",
+        "contents" => "<!-- index.html -->",
+        "layouts" => [],
+        "articles" => [
+          %{
+            "directory" => ["_articles", "article"],
+            "input_path" => "_articles/article/index.html",
+            "output_path" => "_output/article/index.html",
+            "path" => "/article/",
+            "contents" => "<!-- _articles/article/index.html -->",
+            "layouts" => []
+          }
+        ]
+      },
+      %{
+        "directory" => ["_articles", "article"],
+        "input_path" => "_articles/article/index.html",
+        "output_path" => "_output/article/index.html",
+        "path" => "/article/",
+        "contents" => "<!-- _articles/article/index.html -->",
+        "layouts" => []
+      }
+    ]}
   """
   def index(resources) do
     index = resources
     |> Enum.filter(fn({_, input_path, _}) ->
       !(input_path |> Path.basename |> String.starts_with?("_"))
     end)
-    |> Enum.map(fn({directory, input_path, contents} = resource) ->
-      metadata(resources, directory)
-      |> Map.merge(%{
-        "directory" => directory,
-        "input_path" => input_path,
-        "output_path" => output_path(resource),
-        "path" => path(resource),
-        "contents" => contents,
-        "layouts" => layouts(resources, directory, input_path)
-      })
-    end)
+    |> Enum.map(fn(resource) -> index(resource, resources) end)
 
     {:ok, index}
+  end
+
+  def index({directory, input_path, contents} = resource, resources) do
+    subresources(resources, directory)
+    |> Map.merge(metadata(resources, directory))
+    |> Map.merge(%{
+      "directory" => directory,
+      "input_path" => input_path,
+      "output_path" => output_path(resource),
+      "path" => path(resource),
+      "contents" => contents,
+      "layouts" => layouts(resources, directory, input_path)
+    })
   end
 
   defp path(resource) do
@@ -299,5 +335,31 @@ defmodule Dracula.Indexer do
     resources |> Enum.find(fn({directory, path, _}) ->
       directory == search_directory && Path.basename(path) == "_metadata.yml"
     end)
+  end
+
+  defp subresources(resources, search_directory) do
+    resources
+    |> Enum.filter(fn(resource) ->
+      select_subresource(resource, search_directory)
+    end)
+    |> to_subresources(resources)
+  end
+
+  def select_subresource({[], _, _}, _search_directory), do: false
+  def select_subresource({rest, _, _}, []) do
+    rest |> List.first |> String.starts_with?("_")
+  end
+  def select_subresource(_resource, _search_directory), do: false
+
+  def to_subresources([], _), do: %{}
+  def to_subresources([{[directory|_], _, _} = subresource|tail], resources) do
+    key = String.replace_leading(directory, "_", "")
+
+    {_, subresources} = to_subresources(tail, resources)
+    |> Map.get_and_update(key, fn(current_value) ->
+      {current_value, [index(subresource, resources)]}
+    end)
+
+    subresources
   end
 end
