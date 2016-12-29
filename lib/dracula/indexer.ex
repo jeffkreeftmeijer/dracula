@@ -151,6 +151,22 @@ defmodule Dracula.Indexer do
         "layouts" => []
       }
     ]}
+
+  If there's a metadata file (named `_metadata.yml`) in the same directory as
+  the resource, its contents get added to the resource.
+
+    iex> Dracula.Indexer.index([{[], "index.md", "<!-- index.md -->"}, {[], "_metadata.yml", "title: The index"} ])
+    {:ok, [
+      %{
+        "directory" => [],
+        "input_path" => "index.md",
+        "output_path" => "_output/index.html",
+        "path" => "/",
+        "contents" => "<!-- index.md -->",
+        "layouts" => [],
+        "title" => "The index"
+      }
+    ]}
   """
   def index(resources) do
     index = resources
@@ -158,14 +174,15 @@ defmodule Dracula.Indexer do
       !(input_path |> Path.basename |> String.starts_with?("_"))
     end)
     |> Enum.map(fn({directory, input_path, contents} = resource) ->
-      %{
+      metadata(resources, directory)
+      |> Map.merge(%{
         "directory" => directory,
         "input_path" => input_path,
         "output_path" => output_path(resource),
         "path" => path(resource),
         "contents" => contents,
         "layouts" => layouts(resources, directory, input_path)
-      }
+      })
     end)
 
     {:ok, index}
@@ -221,5 +238,20 @@ defmodule Dracula.Indexer do
 
   defp layoutable?(path) do
     ~w(.md .liquid) |> Enum.member?(Path.extname(path))
+  end
+
+  defp metadata(resources, directory) do
+    case metadata_for(resources, directory) do
+      {_, _, contents} ->
+        {:ok, metadata} = Dracula.YAML.to_map(contents)
+        metadata
+      _ -> %{}
+    end
+  end
+
+  defp metadata_for(resources, search_directory) do
+    resources |> Enum.find(fn({directory, path, _}) ->
+      directory == search_directory && Path.basename(path) == "_metadata.yml"
+    end)
   end
 end
