@@ -136,9 +136,9 @@ defmodule Dracula.Indexer do
       }
     ]}
 
-  Layouts are only loaded for Markdown files, so HTML files will always have an
-  empty "layouts" item, even if there's a `_layout.liquid` file present in their
-  input directories.
+  Layouts are only loaded for Markdown and Liquid files, so HTML files will
+  always have an empty "layouts" item, even if there's a `_layout.liquid` file
+  present in their input directories.
 
     iex> Dracula.Indexer.index([{[], "index.html", "<!-- index.html -->"}, {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"} ])
     {:ok, [
