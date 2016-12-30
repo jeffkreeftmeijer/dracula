@@ -248,7 +248,8 @@ defmodule Dracula.Indexer do
     iex> Dracula.Indexer.index(
     ...>   [
     ...>     {[], "index.html", "<!-- index.html -->"},
-    ...>     {["_articles", "article"], "_articles/article/index.html", "<!-- _articles/article/index.html -->"}
+    ...>     {["_articles", "article"], "_articles/article/index.html", "<!-- _articles/article/index.html -->"},
+    ...>     {["_articles", "another_article"], "_articles/another_article/index.html", "<!-- _articles/another_article/index.html -->"}
     ...>   ]
     ...> )
     {:ok, [
@@ -267,6 +268,14 @@ defmodule Dracula.Indexer do
             "path" => "/article/",
             "contents" => "<!-- _articles/article/index.html -->",
             "layouts" => []
+          },
+          %{
+            "directory" => ["_articles", "another_article"],
+            "input_path" => "_articles/another_article/index.html",
+            "output_path" => "_output/another_article/index.html",
+            "path" => "/another_article/",
+            "contents" => "<!-- _articles/another_article/index.html -->",
+            "layouts" => []
           }
         ]
       },
@@ -276,6 +285,14 @@ defmodule Dracula.Indexer do
         "output_path" => "_output/article/index.html",
         "path" => "/article/",
         "contents" => "<!-- _articles/article/index.html -->",
+        "layouts" => []
+      },
+      %{
+        "directory" => ["_articles", "another_article"],
+        "input_path" => "_articles/another_article/index.html",
+        "output_path" => "_output/another_article/index.html",
+        "path" => "/another_article/",
+        "contents" => "<!-- _articles/another_article/index.html -->",
         "layouts" => []
       }
     ]}
@@ -402,7 +419,12 @@ defmodule Dracula.Indexer do
 
     {_, subresources} = to_subresources(tail, resources)
     |> Map.get_and_update(key, fn(current_value) ->
-      {current_value, [index(subresource, resources)]}
+      new_value = case current_value do
+        nil -> [index(subresource, resources)]
+        _ -> [index(subresource, resources)|current_value]
+      end
+
+      {current_value, new_value}
     end)
 
     subresources
