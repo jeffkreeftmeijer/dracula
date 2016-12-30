@@ -249,6 +249,7 @@ defmodule Dracula.Indexer do
     ...>   [
     ...>     {[], "index.html", "<!-- index.html -->"},
     ...>     {["_articles", "article"], "_articles/article/index.html", "<!-- _articles/article/index.html -->"},
+    ...>     {["_articles", "article"], "_articles/article/_metadata.yml", "title: An article"},
     ...>     {["_articles", "another_article"], "_articles/another_article/index.html", "<!-- _articles/another_article/index.html -->"}
     ...>   ]
     ...> )
@@ -267,7 +268,8 @@ defmodule Dracula.Indexer do
             "output_path" => "_output/article/index.html",
             "path" => "/article/",
             "contents" => "<!-- _articles/article/index.html -->",
-            "layouts" => []
+            "layouts" => [],
+            "title" => "An article"
           },
           %{
             "directory" => ["_articles", "another_article"],
@@ -285,7 +287,8 @@ defmodule Dracula.Indexer do
         "output_path" => "_output/article/index.html",
         "path" => "/article/",
         "contents" => "<!-- _articles/article/index.html -->",
-        "layouts" => []
+        "layouts" => [],
+        "title" => "An article"
       },
       %{
         "directory" => ["_articles", "another_article"],
@@ -407,6 +410,7 @@ defmodule Dracula.Indexer do
 
   defp subresources(resources, search_directory) do
     resources
+    |> without_underscored_files
     |> Enum.filter(fn(resource) ->
       select_subresource(resource, search_directory)
     end)
