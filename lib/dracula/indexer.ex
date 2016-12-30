@@ -35,7 +35,9 @@ defmodule Dracula.Indexer do
       }
     ]}
 
-    iex> Dracula.Indexer.index([{["about"], "about/index.html", "<!-- about/index.html -->"}])
+    iex> Dracula.Indexer.index(
+    ...>   [{["about"], "about/index.html", "<!-- about/index.html -->"}]
+    ...> )
     {:ok, [
       %{
         "directory" => ["about"],
@@ -51,7 +53,9 @@ defmodule Dracula.Indexer do
   directory, so the output_path gets built using the split directory path (
   which is the path to the file's directory, relative from the root path)
 
-    iex> Dracula.Indexer.index([{[], "path/to/file/index.html", "<!-- index.html -->"}])
+    iex> Dracula.Indexer.index(
+    ...>   [{[], "path/to/file/index.html", "<!-- index.html -->"}]
+    ...> )
     {:ok, [
       %{
         "directory" => [],
@@ -78,7 +82,9 @@ defmodule Dracula.Indexer do
       }
     ]}
 
-    iex> Dracula.Indexer.index([{[], "foo.liquid", "{% comment %}\nfoo.liquid\n{% endcomment %}"}])
+    iex> Dracula.Indexer.index(
+    ...>   [{[], "foo.liquid", "{% comment %}\nfoo.liquid\n{% endcomment %}"}]
+    ...> )
     {:ok, [
       %{
         "directory" => [],
@@ -93,7 +99,12 @@ defmodule Dracula.Indexer do
   If there's a file named `_layout.liquid` in the same directory as the
   resource, its contents get included in the "layouts" item.
 
-    iex> Dracula.Indexer.index([{[], "index.md", "<!-- index.md -->"}, {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"} ])
+    iex> Dracula.Indexer.index(
+    ...>   [
+    ...>     {[], "index.md", "<!-- index.md -->"},
+    ...>     {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"}
+    ...>   ]
+    ...> )
     {:ok, [
       %{
         "directory" => [],
@@ -105,7 +116,12 @@ defmodule Dracula.Indexer do
       }
     ]}
 
-    iex> Dracula.Indexer.index([{[], "index.liquid", "{% comment %}\nindex.liquid\n{% endcomment %}"}, {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"} ])
+    iex> Dracula.Indexer.index(
+    ...>   [
+    ...>     {[], "index.liquid", "{% comment %}\nindex.liquid\n{% endcomment %}"},
+    ...>     {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"}
+    ...>   ]
+    ...> )
     {:ok, [
       %{
         "directory" => [],
@@ -121,7 +137,13 @@ defmodule Dracula.Indexer do
   directory above has a `_layout.liquid` file as well, both get included in the
   "layouts" item, up to the root.
 
-    iex> Dracula.Indexer.index([{["sub"], "sub/index.md", "<!-- sub/index.md -->"}, {["sub"], "_layout.liquid", "{% comment %}\nsub/_layout.liquid\n{% endcomment %}"}, {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"} ])
+    iex> Dracula.Indexer.index(
+    ...>   [
+    ...>     {["sub"], "sub/index.md", "<!-- sub/index.md -->"},
+    ...>     {["sub"], "_layout.liquid", "{% comment %}\nsub/_layout.liquid\n{% endcomment %}"},
+    ...>     {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"}
+    ...>   ]
+    ...> )
     {:ok, [
       %{
         "directory" => ["sub"],
@@ -140,7 +162,12 @@ defmodule Dracula.Indexer do
   always have an empty "layouts" item, even if there's a `_layout.liquid` file
   present in their input directories.
 
-    iex> Dracula.Indexer.index([{[], "index.html", "<!-- index.html -->"}, {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"} ])
+    iex> Dracula.Indexer.index(
+    ...>   [
+    ...>     {[], "index.html", "<!-- index.html -->"},
+    ...>     {[], "_layout.liquid", "{% comment %}\n_layout.liquid\n{% endcomment %}"}
+    ...>   ]
+    ...> )
     {:ok, [
       %{
         "directory" => [],
@@ -155,7 +182,12 @@ defmodule Dracula.Indexer do
   If there's a metadata file (named `_metadata.yml`) in the same directory as
   the resource, its contents get added to the resource.
 
-    iex> Dracula.Indexer.index([{[], "index.md", "<!-- index.md -->"}, {[], "_metadata.yml", "title: The index"} ])
+    iex> Dracula.Indexer.index(
+    ...>   [
+    ...>     {[], "index.md", "<!-- index.md -->"},
+    ...>     {[], "_metadata.yml", "title: The index"}
+    ...>   ]
+    ...> )
     {:ok, [
       %{
         "directory" => [],
@@ -173,7 +205,13 @@ defmodule Dracula.Indexer do
   directory above has one as well, both get merged into one. The metadata file
   closest to the resource overwrites its parents.
 
-    iex> Dracula.Indexer.index([{["sub"], "sub/index.md", "<!-- sub/index.md -->"}, {["sub"], "_metadata.yml", "title: The subdirectory"}, {[], "_metadata.yml", "title: The index\ndescription: A description"}])
+    iex> Dracula.Indexer.index(
+    ...>   [
+    ...>     {["sub"], "sub/index.md", "<!-- sub/index.md -->"},
+    ...>     {["sub"], "_metadata.yml", "title: The subdirectory"},
+    ...>     {[], "_metadata.yml", "title: The index\ndescription: A description"}
+    ...>   ]
+    ...> )
     {:ok, [
       %{
         "directory" => ["sub"],
@@ -190,7 +228,9 @@ defmodule Dracula.Indexer do
   Subresources are resources in directories with an underscore. These
   underscored directories get removed from the output path.
 
-    iex> Dracula.Indexer.index([{["_about"], "_about/index.html", "<!-- _about/index.html -->"}])
+    iex> Dracula.Indexer.index(
+    ...>   [{["_about"], "_about/index.html", "<!-- _about/index.html -->"}]
+    ...> )
     {:ok, [
       %{
         "directory" => ["_about"],
@@ -205,7 +245,12 @@ defmodule Dracula.Indexer do
   Subresources get duplicated into their parents' resources, to allow
   referencing subresources in template files.
 
-    iex> Dracula.Indexer.index([{[], "index.html", "<!-- index.html -->"}, {["_articles", "article"], "_articles/article/index.html", "<!-- _articles/article/index.html -->"} ])
+    iex> Dracula.Indexer.index(
+    ...>   [
+    ...>     {[], "index.html", "<!-- index.html -->"},
+    ...>     {["_articles", "article"], "_articles/article/index.html", "<!-- _articles/article/index.html -->"}
+    ...>   ]
+    ...> )
     {:ok, [
       %{
         "directory" => [],
