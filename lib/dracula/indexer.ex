@@ -299,9 +299,7 @@ defmodule Dracula.Indexer do
   """
   def index(resources) do
     index = resources
-    |> Enum.filter(fn({_, input_path, _}) ->
-      !(input_path |> Path.basename |> String.starts_with?("_"))
-    end)
+    |> without_underscored_files
     |> Enum.map(fn(resource) -> index(resource, resources) end)
 
     {:ok, index}
@@ -318,6 +316,14 @@ defmodule Dracula.Indexer do
       "contents" => contents,
       "layouts" => layouts(resources, directory, input_path)
     })
+  end
+
+  defp without_underscored_files([]), do: []
+  defp without_underscored_files([{_, input_path, _} = resource|tail]) do
+    case input_path |> Path.basename |> String.starts_with?("_") do
+      false -> [resource|without_underscored_files(tail)]
+      true -> without_underscored_files(tail)
+    end
   end
 
   defp path(resource) do
