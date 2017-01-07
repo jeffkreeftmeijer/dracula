@@ -96,6 +96,21 @@ defmodule Dracula.Indexer do
       }
     ]}
 
+  If a Markdown or Liquid file has the same name as the directory, it's path and
+  output path are rewritten to "index.html".
+
+    iex> Dracula.Indexer.index([{["sub"], "sub/sub.md", "<!-- sub/sub.md -->"}])
+    {:ok, [
+      %{
+        "directory" => ["sub"],
+        "input_path" => "sub/sub.md",
+        "output_path" => "_output/sub/index.html",
+        "path" => "/sub/",
+        "contents" => "<!-- sub/sub.md -->",
+        "layouts" => []
+      }
+    ]}
+
   If there's a file named `_layout.liquid` in the same directory as the
   resource, its contents get included in the "layouts" item.
 
@@ -337,19 +352,41 @@ defmodule Dracula.Indexer do
     Path.join("_output", relative_path(resource))
   end
 
+  defp relative_path(path) when is_binary(path) do
+    relative_path({[], path})
+  end
+
   defp relative_path({[], path}) do
     path
     |> Path.basename
     |> with_output_extension
   end
-  defp relative_path({[directory|tail], path}) do
+  defp relative_path({[directory], path}) do
+    relative_output_path = path
+    |> with_output_filename(directory)
+    |> relative_path
+
     case String.starts_with?(directory, "_") do
-      false -> Path.join(directory, relative_path({tail, path}))
-      true -> relative_path({tail, path})
+      false -> Path.join(directory, relative_output_path)
+      true -> relative_output_path
+    end
+  end
+  defp relative_path({[directory|tail], path}) do
+    relative_path = relative_path({tail, path})
+    case String.starts_with?(directory, "_") do
+      false -> Path.join(directory, relative_path)
+      true -> relative_path
     end
   end
   defp relative_path({directories, path, _contents}) do
     relative_path({directories, path})
+  end
+
+  defp with_output_filename(path, directory) do
+    case directory == Path.basename(path, Path.extname(path)) do
+      true -> String.replace_trailing(path, Path.basename(path), "index.html")
+      false -> path
+    end
   end
 
   defp with_output_extension(filename) do
