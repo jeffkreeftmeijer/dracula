@@ -387,8 +387,7 @@ defmodule Dracula.Indexer do
   defp metadata(resources, []) do
     case metadata_for(resources, []) do
       {_, _, contents} ->
-        {:ok, metadata} = Dracula.YAML.to_map(contents)
-        metadata
+        YamlElixir.read_from_string(contents)
       _ -> %{}
     end
   end
@@ -396,7 +395,7 @@ defmodule Dracula.Indexer do
     parent_metadata = metadata(resources, directory |> Enum.drop(-1))
     case metadata_for(resources, directory) do
       {_, _, contents} ->
-        {:ok, metadata} = Dracula.YAML.to_map(contents)
+        metadata = YamlElixir.read_from_string(contents)
         Map.merge(parent_metadata, metadata)
       _ -> parent_metadata
     end
