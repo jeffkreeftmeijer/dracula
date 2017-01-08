@@ -25,6 +25,12 @@ defmodule Dracula.Renderer do
     iex> Dracula.Renderer.layout("index.md", %{"layouts" => ["layout [{{ inner }}]"]})
     "layout [index.md]"
 
+  Given a resource with multiple layouts, the layouts are rendered in order with
+  the passed contents as their inner parameter.
+
+    iex> Dracula.Renderer.layout("index.md", %{"layouts" => ["layout [{{ inner }}]", "another [{{ inner }}]"]})
+    "another [layout [index.md]]"
+
   """
   def render(%{"contents" => contents, "input_path" => path} = resource) do
     case Path.extname(path) do
@@ -38,11 +44,12 @@ defmodule Dracula.Renderer do
     end
   end
 
-  def layout(contents, %{"layouts" => [layout]}) do
+  def layout(contents, %{"layouts" => []}), do: contents
+  def layout(contents, %{"layouts" => [layout|tail]}) do
     {:ok, rendered, _} = layout
     |> Liquid.Template.parse
     |> Liquid.Template.render(%{"inner" => contents})
 
-    rendered
+    layout(rendered, %{"layouts" => tail})
   end
 end
