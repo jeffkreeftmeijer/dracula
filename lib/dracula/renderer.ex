@@ -12,13 +12,20 @@ defmodule Dracula.Renderer do
 
     iex> Dracula.Renderer.render(%{"input_path" => "index.liquid", "contents" => "{{ \"index.liquid\" }}"})
     "index.liquid"
+
+  Given a Markdown resource, the resource's metadata gets passed to the Liquid
+  renderer.
+
+    iex> Dracula.Renderer.render(%{"input_path" => "index.liquid", "contents" => "{{ name }}", "name" => "index.liquid"})
+    "index.liquid"
+
   """
-  def render(%{"contents" => contents, "input_path" => path}) do
+  def render(%{"contents" => contents, "input_path" => path} = resource) do
     case Path.extname(path) do
       ".liquid" ->
         {:ok, rendered, _} = contents
         |> Liquid.Template.parse
-        |> Liquid.Template.render
+        |> Liquid.Template.render(resource)
         rendered
       ".md" -> Earmark.to_html(contents)
       _ -> contents
