@@ -472,14 +472,14 @@ defmodule Dracula.Indexer do
     |> to_subresources(resources)
   end
 
-  def select_subresource({[], _, _}, _search_directory), do: false
-  def select_subresource({rest, _, _}, []) do
+  defp select_subresource({[], _, _}, _search_directory), do: false
+  defp select_subresource({rest, _, _}, []) do
     rest |> List.first |> String.starts_with?("_")
   end
-  def select_subresource(_resource, _search_directory), do: false
+  defp select_subresource(_resource, _search_directory), do: false
 
-  def to_subresources([], _), do: %{}
-  def to_subresources([{[directory|_], _, _} = subresource|tail], resources) do
+  defp to_subresources([], _), do: %{}
+  defp to_subresources([{[directory|_], _, _} = subresource|tail], resources) do
     key = String.replace_leading(directory, "_", "")
 
     {_, subresources} = to_subresources(tail, resources)
