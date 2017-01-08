@@ -27,6 +27,10 @@ defmodule Dracula.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:yaml_elixir, "~> 1.3"}]
+    [
+      {:yaml_elixir, "~> 1.3"},
+      {:earmark, "~> 1.0"},
+      {:liquid, "~> 0.4.0"}
+    ]
   end
 end
