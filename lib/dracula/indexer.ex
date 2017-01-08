@@ -257,15 +257,16 @@ defmodule Dracula.Indexer do
       }
     ]}
 
-  Subresources get duplicated into their parents' resources, to allow
-  referencing subresources in template files.
+  HTML or Markdown subresources get duplicated into their parents' resources, to
+  allow referencing subresources in template files.
 
     iex> Dracula.Indexer.index(
     ...>   [
     ...>     {[], "index.html", "<!-- index.html -->"},
     ...>     {["_articles", "article"], "_articles/article/index.html", "<!-- _articles/article/index.html -->"},
     ...>     {["_articles", "article"], "_articles/article/_metadata.yml", "title: An article"},
-    ...>     {["_articles", "another_article"], "_articles/another_article/index.html", "<!-- _articles/another_article/index.html -->"}
+    ...>     {["_articles", "another_article"], "_articles/another_article/index.html", "<!-- _articles/another_article/index.html -->"},
+    ...>     {["_articles", "another_article"], "_articles/another_article/image.gif", "GIF89a!,D;"}
     ...>   ]
     ...> )
     {:ok, [
@@ -312,6 +313,14 @@ defmodule Dracula.Indexer do
         "path" => "/another_article/",
         "contents" => "<!-- _articles/another_article/index.html -->",
         "layouts" => []
+      },
+      %{
+        "directory" => ["_articles", "another_article"],
+        "input_path" => "_articles/another_article/image.gif",
+        "output_path" => "_output/another_article/image.gif",
+        "path" => "/another_article/image.gif",
+        "contents" => "GIF89a!,D;",
+        "layouts" => []
       }
     ]}
   """
@@ -341,6 +350,15 @@ defmodule Dracula.Indexer do
     case input_path |> Path.basename |> String.starts_with?("_") do
       false -> [resource|without_underscored_files(tail)]
       true -> without_underscored_files(tail)
+    end
+  end
+
+  defp only_html_output([]), do: []
+  defp only_html_output([{_, input_path, _} = resource|tail]) do
+    extname = Path.extname(input_path)
+    case Enum.member?(~w(.html .md), extname) do
+      true -> [resource|only_html_output(tail)]
+      false -> only_html_output(tail)
     end
   end
 
@@ -447,6 +465,7 @@ defmodule Dracula.Indexer do
   defp subresources(resources, search_directory) do
     resources
     |> without_underscored_files
+    |> only_html_output
     |> Enum.filter(fn(resource) ->
       select_subresource(resource, search_directory)
     end)
