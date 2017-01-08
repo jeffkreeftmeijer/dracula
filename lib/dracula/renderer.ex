@@ -31,6 +31,10 @@ defmodule Dracula.Renderer do
     iex> Dracula.Renderer.layout("index.md", %{"layouts" => ["layout [{{ inner }}]", "another [{{ inner }}]"]})
     "another [layout [index.md]]"
 
+  A layout is rendered with the resource's metadata.
+
+    iex> Dracula.Renderer.layout("index.md", %{"layouts" => ["{{title}}"], "title" => "index.md"})
+    "index.md"
   """
   def render(%{"contents" => contents, "input_path" => path} = resource) do
     case Path.extname(path) do
@@ -45,10 +49,10 @@ defmodule Dracula.Renderer do
   end
 
   def layout(contents, %{"layouts" => []}), do: contents
-  def layout(contents, %{"layouts" => [layout|tail]}) do
+  def layout(contents, %{"layouts" => [layout|tail]} = resource) do
     {:ok, rendered, _} = layout
     |> Liquid.Template.parse
-    |> Liquid.Template.render(%{"inner" => contents})
+    |> Liquid.Template.render(Map.merge(resource, %{"inner" => contents}))
 
     layout(rendered, %{"layouts" => tail})
   end
