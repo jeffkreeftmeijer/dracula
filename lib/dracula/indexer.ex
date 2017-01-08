@@ -473,8 +473,8 @@ defmodule Dracula.Indexer do
   end
 
   defp select_subresource({[], _, _}, _search_directory), do: false
-  defp select_subresource({rest, _, _}, []) do
-    rest |> List.first |> String.starts_with?("_")
+  defp select_subresource({[directory|_], _, _}, []) do
+    String.starts_with?(directory, "_")
   end
   defp select_subresource(_resource, _search_directory), do: false
 
