@@ -99,7 +99,10 @@ defmodule Dracula.Indexer do
   If a Markdown or Liquid file has the same name as the directory, it's path and
   output path are rewritten to "index.html".
 
-    iex> Dracula.Indexer.index([{["sub"], "sub/sub.md", "<!-- sub/sub.md -->"}])
+    iex> Dracula.Indexer.index([
+    ...>   {["sub"], "sub/sub.md", "<!-- sub/sub.md -->"},
+    ...>   {["sub"], "sub/sub.gif", "GIF89a!,D;"},
+    ...> ])
     {:ok, [
       %{
         "directory" => ["sub"],
@@ -107,6 +110,14 @@ defmodule Dracula.Indexer do
         "output_path" => "_output/sub/index.html",
         "path" => "/sub/",
         "contents" => "<!-- sub/sub.md -->",
+        "layouts" => []
+      },
+      %{
+        "directory" => ["sub"],
+        "input_path" => "sub/sub.gif",
+        "output_path" => "_output/sub/sub.gif",
+        "path" => "/sub/sub.gif",
+        "contents" => "GIF89a!,D;",
         "layouts" => []
       }
     ]}
@@ -402,7 +413,7 @@ defmodule Dracula.Indexer do
   end
 
   defp with_output_filename(path, directory) do
-    case directory == Path.basename(path, Path.extname(path)) do
+    case renderable?(path) && directory == Path.basename(path, Path.extname(path)) do
       true -> String.replace_trailing(path, Path.basename(path), "index.html")
       false -> path
     end
