@@ -195,12 +195,13 @@ defmodule Dracula.Indexer do
     ]}
 
   If there's a metadata file (named `_metadata.yml`) in the same directory as
-  the resource, its contents get added to the resource.
+  the resource, its contents get added to the resource. The metadata overwites
+  the resource's data.
 
     iex> Dracula.Indexer.index(
     ...>   [
     ...>     {[], "index.md", "<!-- index.md -->"},
-    ...>     {[], "_metadata.yml", "title: The index"}
+    ...>     {[], "_metadata.yml", "title: The index\npath: /index.html"}
     ...>   ]
     ...> )
     {:ok, [
@@ -208,7 +209,7 @@ defmodule Dracula.Indexer do
         "directory" => [],
         "input_path" => "index.md",
         "output_path" => "_output/index.html",
-        "path" => "/",
+        "path" => "/index.html",
         "contents" => "<!-- index.md -->",
         "layouts" => [],
         "title" => "The index"
@@ -334,7 +335,6 @@ defmodule Dracula.Indexer do
 
   def index({directory, input_path, contents} = resource, resources) do
     subresources(resources, directory)
-    |> Map.merge(metadata(resources, directory))
     |> Map.merge(%{
       "directory" => directory,
       "input_path" => input_path,
@@ -343,6 +343,7 @@ defmodule Dracula.Indexer do
       "contents" => contents,
       "layouts" => layouts(resources, directory, input_path)
     })
+    |> Map.merge(metadata(resources, directory))
   end
 
   defp without_underscored_files([]), do: []
