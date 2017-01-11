@@ -409,22 +409,21 @@ defmodule Dracula.Indexer do
   end
 
   defp with_output_extension(filename) do
-    extname = Path.extname(filename)
-    case Enum.member?(~w(.liquid .md), extname) do
-      true -> filename |> String.replace_trailing(extname, ".html")
+    case renderable?(filename) do
+      true -> filename |> String.replace_trailing(Path.extname(filename), ".html")
       false -> filename
     end
   end
 
   defp layouts(resources, [], target_path) do
-    case [layoutable?(target_path) && layout_for(resources, [])] do
+    case [renderable?(target_path) && layout_for(resources, [])] do
       [{_, _, contents}] -> [contents]
       _ -> []
     end
   end
   defp layouts(resources, directory, target_path) do
     parent_layouts = layouts(resources, directory |> Enum.drop(-1), target_path)
-    case [layoutable?(target_path) && layout_for(resources, directory)] do
+    case [renderable?(target_path) && layout_for(resources, directory)] do
       [{_, _, contents}] -> [contents|parent_layouts]
       _ -> parent_layouts
     end
@@ -436,7 +435,7 @@ defmodule Dracula.Indexer do
     end)
   end
 
-  defp layoutable?(path) do
+  defp renderable?(path) do
     ~w(.md .liquid) |> Enum.member?(Path.extname(path))
   end
 
