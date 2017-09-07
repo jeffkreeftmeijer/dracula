@@ -9,7 +9,7 @@ defmodule Dracula.Indexer do
   """
   def index(root) do
     root
-    |> Path.join("*.html")
+    |> Path.join("*.{html,md}")
     |> Path.wildcard
     |> Enum.map(fn(path) ->
       index(path, Path.relative_to(path, root))
@@ -17,13 +17,20 @@ defmodule Dracula.Indexer do
     |> Enum.into(%{})
   end
 
-  defp index(input_path, output_path) do
-    index = %{input_path: input_path}
+  defp index(path, relative_path) do
+    index = %{input_path: path}
     |> fetch_layout
     |> render_contents
     |> Map.drop([:layouts, :input_path])
 
-    {output_path, index}
+    {output_path_from_relative_path(relative_path), index}
+  end
+
+  defp output_path_from_relative_path(path) do
+    case Path.extname(path) do
+      ".md" -> String.replace_trailing(path, ".md", ".html")
+      _ -> path
+    end
   end
 
   defp render_contents(%{input_path: input_path, layouts: layouts} = index) do
