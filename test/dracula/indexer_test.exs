@@ -6,8 +6,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/single_file") == %{
       "index.html" => %{
         contents: "<!-- index.html -->\n",
-        input_path: "test/single_file/index.html",
-        layouts: []
+        input_path: "test/single_file/index.html"
       }
     }
   end
@@ -16,8 +15,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/file_with_layout") == %{
       "index.html" => %{
         contents: "<!-- layout -->\n<!-- index.html -->\n\n",
-        input_path: "test/file_with_layout/index.html",
-        layouts: ["<!-- layout -->\n<%= @contents %>\n"]
+        input_path: "test/file_with_layout/index.html"
       }
     }
   end

@@ -21,6 +21,7 @@ defmodule Dracula.Indexer do
     index = %{input_path: input_path}
     |> fetch_layout
     |> fetch_contents
+    |> Map.delete(:layouts)
 
     {output_path, index}
   end
