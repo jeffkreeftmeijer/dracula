@@ -20,13 +20,13 @@ defmodule Dracula.Indexer do
   defp index(input_path, output_path) do
     index = %{input_path: input_path}
     |> fetch_layout
-    |> fetch_contents
+    |> render_contents
     |> Map.drop([:layouts, :input_path])
 
     {output_path, index}
   end
 
-  defp fetch_contents(%{input_path: input_path, layouts: layouts} = index) do
+  defp render_contents(%{input_path: input_path, layouts: layouts} = index) do
     contents = input_path
     |> File.read!
     |> Renderer.render(input_path, layouts)
