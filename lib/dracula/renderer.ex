@@ -21,10 +21,12 @@ defmodule Dracula.Renderer do
     )
   end
   def render(contents, _extname, _metadata, []), do: contents
-  def render(contents, extname, _metadata, [layout|tail]) do
+  def render(contents, extname, metadata, [layout|tail]) do
+    assigns = Keyword.merge([contents: contents], metadata)
     render(
-      EEx.eval_string(layout, assigns: [contents: contents]),
+      EEx.eval_string(layout, assigns: assigns),
       extname,
+      metadata,
       tail
     )
   end
