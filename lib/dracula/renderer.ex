@@ -6,7 +6,7 @@ defmodule Dracula.Renderer do
   @doc """
   Renders a file.
   """
-  def render(contents, path, layouts \\ [])
+  def render(contents, extname, layouts \\ [])
   def render(contents, ".md", layouts) do
     render(
       Earmark.as_html!(contents),
@@ -14,11 +14,11 @@ defmodule Dracula.Renderer do
       layouts
     )
   end
-  def render(contents, _path, []), do: contents
-  def render(contents, path, [layout|tail]) do
+  def render(contents, _extname, []), do: contents
+  def render(contents, extname, [layout|tail]) do
     render(
       EEx.eval_string(layout, assigns: [contents: contents]),
-      path,
+      extname,
       tail
     )
   end
