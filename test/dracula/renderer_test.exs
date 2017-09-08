@@ -24,10 +24,19 @@ defmodule Dracula.RendererTest do
     ) == "index.eex"
   end
 
+  test "renders an EEx page with metadata" do
+    assert Renderer.render(
+      ~s{<%= @title %>},
+      ".eex",
+      [title: "index.eex"]
+    ) == "index.eex"
+  end
+
   test "renders an HTML page with a layout" do
     assert Renderer.render(
       "<!-- index.html -->\n",
       ".html",
+      [],
       ["<!-- _layout.eex -->\n<%= @contents %>"]
     ) == "<!-- _layout.eex -->\n<!-- index.html -->\n"
   end
