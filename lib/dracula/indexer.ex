@@ -9,8 +9,13 @@ defmodule Dracula.Indexer do
   """
   def index(root) do
     root
-    |> Path.join("*.{html,md}")
+    |> Path.join("*.{html,md,eex}")
     |> Path.wildcard
+    |> Enum.reject(fn(path) ->
+      path
+      |> Path.basename
+      |> String.starts_with?("_")
+    end)
     |> Enum.map(fn(path) ->
       index(path, Path.relative_to(path, root))
     end)
@@ -29,6 +34,7 @@ defmodule Dracula.Indexer do
   defp output_path_from_relative_path(path) do
     case Path.extname(path) do
       ".md" -> String.replace_trailing(path, ".md", ".html")
+      ".eex" -> String.replace_trailing(path, ".eex", ".html")
       _ -> path
     end
   end
