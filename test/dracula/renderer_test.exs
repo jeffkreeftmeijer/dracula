@@ -17,6 +17,13 @@ defmodule Dracula.RendererTest do
       ~s{<p>foot … <a href=\"#fn:1\" id=\"fnref:1\" class=\"footnote\" title=\"see footnote\">1</a></p>\n<div class=\"footnotes\">\n<hr>\n<ol>\n<li id=\"fn:1\"><p>… note!&nbsp;<a href=\"#fnref:1\" title=\"return to article\" class=\"reversefootnote\">&#x21A9;</a></p>\n</li>\n</ol>\n\n</div>}
   end
 
+  test "renders an EEx page" do
+    assert Renderer.render(
+      ~s{<%= "index.eex" %>},
+      ".eex"
+    ) == "index.eex"
+  end
+
   test "renders an HTML page with a layout" do
     assert Renderer.render(
       "<!-- index.html -->\n",
