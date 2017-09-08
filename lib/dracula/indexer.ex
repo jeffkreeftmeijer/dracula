@@ -36,7 +36,7 @@ defmodule Dracula.Indexer do
   defp render_contents(%{input_path: input_path, layouts: layouts} = index) do
     contents = input_path
     |> File.read!
-    |> Renderer.render(input_path, layouts)
+    |> Renderer.render(Path.extname(input_path), layouts)
 
     Map.put(index, :contents, contents)
   end

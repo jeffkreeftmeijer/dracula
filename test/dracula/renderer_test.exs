@@ -7,10 +7,15 @@ defmodule Dracula.RendererTest do
       "<!-- index.html -->\n"
   end
 
+  test "renders a markdown page" do
+    assert Renderer.render("# index.md", ".md") ==
+      "<h1>index.md</h1>\n"
+  end
+
   test "renders an HTML page with a layout" do
     assert Renderer.render(
       "<!-- index.html -->\n",
-      "index.html",
+      ".html",
       ["<!-- _layout.eex -->\n<%= @contents %>"]
     ) == "<!-- _layout.eex -->\n<!-- index.html -->\n"
   end

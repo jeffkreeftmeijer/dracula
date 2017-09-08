@@ -13,7 +13,7 @@ defmodule Dracula.IndexerTest do
   test "indexes a directory with a markdown file" do
     assert Indexer.index("test/markdown_file") == %{
       "index.html" => %{
-        contents: "<!-- index.md -->\n"
+        contents: "<h1>index.md</h1>\n"
       }
     }
   end

@@ -7,6 +7,13 @@ defmodule Dracula.Renderer do
   Renders a file.
   """
   def render(contents, path, layouts \\ [])
+  def render(contents, ".md", layouts) do
+    render(
+      Earmark.as_html!(contents),
+      ".html",
+      layouts
+    )
+  end
   def render(contents, _path, []), do: contents
   def render(contents, path, [layout|tail]) do
     render(
