@@ -21,7 +21,8 @@ defmodule Dracula.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:earmark, github: "jeffkreeftmeijer/earmark", branch: "heading-anchors"}
+      {:earmark, github: "jeffkreeftmeijer/earmark", branch: "heading-anchors"},
+      {:yaml_elixir, "~> 1.3.0"}
     ]
   end
 end

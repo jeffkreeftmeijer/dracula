@@ -25,4 +25,10 @@ defmodule Dracula.IndexerTest do
       "index.html" => %{ contents: "<!-- index.eex -->\n" }
     }
   end
+
+  test "indexes a directory with an EEx file and metadata" do
+    assert Indexer.index("test/eex_file_with_metadata") == %{
+      "index.html" => %{ contents: "<!-- index.eex -->\n" }
+    }
+  end
 end
