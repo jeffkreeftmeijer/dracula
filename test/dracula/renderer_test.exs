@@ -9,7 +9,7 @@ defmodule Dracula.RendererTest do
 
   test "renders a markdown page" do
     assert Renderer.render("# index.md", ".md") ==
-      "<h1>index.md</h1>\n"
+      ~s{<a id="indexmd"></a><h1>index.md</h1>\n}
   end
 
   test "renders an HTML page with a layout" do

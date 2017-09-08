@@ -9,7 +9,7 @@ defmodule Dracula.Renderer do
   def render(contents, extname, layouts \\ [])
   def render(contents, ".md", layouts) do
     render(
-      Earmark.as_html!(contents),
+      Earmark.as_html!(contents, %Earmark.Options{heading_anchors: true}),
       ".html",
       layouts
     )
