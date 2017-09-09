@@ -37,13 +37,15 @@ defmodule Dracula.Indexer do
   end
 
   defp index_path(path, relative_path) do
-    index = %{input_path: path}
+    output_path = output_path_from_relative_path(relative_path)
+
+    index = %{input_path: path, output_path: output_path}
     |> fetch_layout
     |> fetch_metadata
     |> render_contents
-    |> Map.drop([:layouts, :input_path])
+    |> Map.drop([:layouts, :input_path, :output_path])
 
-    {output_path_from_relative_path(relative_path), index}
+    {output_path, index}
   end
 
   defp output_path_from_relative_path(path) do
