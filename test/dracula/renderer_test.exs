@@ -7,6 +7,24 @@ defmodule Dracula.RendererTest do
       "<!-- index.html -->\n"
   end
 
+  test "renders an HTML page with a layout" do
+    assert Renderer.render(
+      "<!-- index.html -->\n",
+      ".html",
+      [],
+      ["<!-- _layout.eex -->\n<%= @contents %>"]
+    ) == "<!-- _layout.eex -->\n<!-- index.html -->\n"
+  end
+
+  test "renders an HTML page with a layout and metadata" do
+    assert Renderer.render(
+      "<!-- index.html -->\n",
+      ".html",
+      [title: "layout.eex"],
+      ["<!-- <%= @title %> -->\n<%= @contents %>"]
+    ) == "<!-- layout.eex -->\n<!-- index.html -->\n"
+  end
+
   test "renders a markdown page, with heading anchors" do
     assert Renderer.render("# index.md", ".md") ==
       ~s{<a id="indexmd"></a><h1>index.md</h1>\n}
@@ -31,23 +49,4 @@ defmodule Dracula.RendererTest do
       [title: "index.eex"]
     ) == "index.eex"
   end
-
-  test "renders an HTML page with a layout" do
-    assert Renderer.render(
-      "<!-- index.html -->\n",
-      ".html",
-      [],
-      ["<!-- _layout.eex -->\n<%= @contents %>"]
-    ) == "<!-- _layout.eex -->\n<!-- index.html -->\n"
-  end
-
-  test "renders an HTML page with a layout and metadata" do
-    assert Renderer.render(
-      "<!-- index.html -->\n",
-      ".html",
-      [title: "layout.eex"],
-      ["<!-- <%= @title %> -->\n<%= @contents %>"]
-    ) == "<!-- layout.eex -->\n<!-- index.html -->\n"
-  end
 end
-
