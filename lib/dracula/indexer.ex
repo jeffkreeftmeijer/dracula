@@ -17,12 +17,12 @@ defmodule Dracula.Indexer do
       |> String.starts_with?("_")
     end)
     |> Enum.map(fn(path) ->
-      index(path, Path.relative_to(path, root))
+      index_path(path, Path.relative_to(path, root))
     end)
     |> Enum.into(%{})
   end
 
-  defp index(path, relative_path) do
+  defp index_path(path, relative_path) do
     index = %{input_path: path}
     |> fetch_layout
     |> fetch_metadata
