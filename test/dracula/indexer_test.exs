@@ -4,13 +4,19 @@ defmodule Dracula.IndexerTest do
 
   test "indexes a directory" do
     assert Indexer.index("test/single_file") == %{
-      "index.html" => %{ contents: "<!-- index.html -->\n", metadata: [] }
+      "index.html" => %{
+        contents: "<!-- index.html -->\n",
+        metadata: [path: "/"]
+      }
     }
   end
 
   test "indexes a directory with a markdown file" do
     assert Indexer.index("test/markdown_file") == %{
-      "index.html" => %{ contents: "<!-- index.md -->", metadata: [] }
+      "index.html" => %{
+        contents: "<!-- index.md -->",
+        metadata: [path: "/"]
+      }
     }
   end
 
@@ -18,14 +24,17 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/file_with_layout") == %{
       "index.html" => %{
         contents: "<!-- layout -->\n<!-- index.html -->\n\n",
-        metadata: []
+        metadata: [path: "/"]
       }
     }
   end
 
   test "indexes a directory with an EEx file" do
     assert Indexer.index("test/eex_file") == %{
-      "index.html" => %{ contents: "<!-- index.eex -->\n", metadata: [] }
+      "index.html" => %{
+        contents: "<!-- index.eex -->\n",
+        metadata: [path: "/"]
+      }
     }
   end
 
@@ -33,7 +42,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/eex_file_with_metadata") == %{
       "index.html" => %{
         contents: "<!-- index.eex -->\n",
-        metadata: [title: "index.eex"]
+        metadata: [title: "index.eex", path: "/"]
       }
     }
   end
@@ -42,11 +51,11 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/subdirectory") == %{
       "index.html" => %{
         contents: "<!-- index.html -->\n",
-        metadata: []
+        metadata: [path: "/"]
       },
       "sub/index.html" => %{
         contents: "<!-- sub/index.html -->\n",
-        metadata: []
+        metadata: [path: "/sub/"]
       }
     }
   end

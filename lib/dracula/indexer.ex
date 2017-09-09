@@ -56,6 +56,10 @@ defmodule Dracula.Indexer do
     end
   end
 
+  defp path_from_output_path(output_path) do
+    String.replace_trailing("/#{output_path}", "index.html", "")
+  end
+
   defp render_contents(%{input_path: input_path, layouts: layouts, metadata: metadata} = index) do
     contents = input_path
     |> File.read!
@@ -75,7 +79,7 @@ Map.put(index, :contents, contents)
     Map.put(index, :layouts, layouts)
   end
 
-  defp fetch_metadata(%{input_path: input_path} = index) do
+  defp fetch_metadata(%{input_path: input_path, output_path: output_path} = index) do
     metadata = case input_path
     |> Path.dirname
     |> Path.join("_metadata.yml")
@@ -88,6 +92,7 @@ Map.put(index, :contents, contents)
         end)
       _ -> []
     end
+    |> Keyword.merge([path: path_from_output_path(output_path)])
 
     Map.put(index, :metadata, metadata)
   end
