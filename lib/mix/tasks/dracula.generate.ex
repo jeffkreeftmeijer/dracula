@@ -8,7 +8,7 @@ defmodule Mix.Tasks.Dracula.Generate do
   @doc """
   Generates a static site, and stores the results in _output.
   """
-  def run(path) do
+  def run([path]) do
     path
     |> Indexer.index
     |> Enum.each(&generate/1)
