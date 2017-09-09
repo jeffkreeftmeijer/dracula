@@ -9,6 +9,8 @@ defmodule Mix.Tasks.Dracula.Generate do
   Generates a static site, and stores the results in _output.
   """
   def run([path]) do
+    {:ok, _started} = Application.ensure_all_started(:yamerl)
+
     path
     |> Indexer.index
     |> Enum.each(&generate/1)
