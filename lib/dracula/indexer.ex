@@ -40,7 +40,7 @@ defmodule Dracula.Indexer do
     output_path = output_path_from_relative_path(relative_path)
 
     index = %{input_path: path, output_path: output_path, root_path: root}
-    |> fetch_layout
+    |> fetch_layouts
     |> fetch_metadata
     |> render_contents
     |> Map.drop([:layouts, :input_path, :output_path, :root_path])
@@ -67,16 +67,32 @@ defmodule Dracula.Indexer do
 Map.put(index, :contents, contents)
   end
 
-  defp fetch_layout(%{input_path: input_path} = index) do
-    layouts = case input_path
+  defp fetch_layouts(%{input_path: input_path, root_path: root_path} = index) do
+    layouts = input_path
     |> Path.dirname
-    |> Path.join("_layout.eex")
-    |> File.read do
-      {:ok, layout} -> [layout]
-      _ -> []
-    end
+    |> do_fetch_layouts(root_path, [])
+    |> Enum.reverse
 
     Map.put(index, :layouts, layouts)
+  end
+
+  defp do_fetch_layouts(path, accumulator) do
+    do_fetch_layouts(path, path, accumulator)
+  end
+  defp do_fetch_layouts(path, path, accumulator) do
+    case path
+    |> Path.join("_layout.eex")
+    |> File.read do
+      {:ok, layout} -> [layout|accumulator]
+      _ -> accumulator
+    end
+  end
+  defp do_fetch_layouts(path, root, accumulator) do
+    do_fetch_layouts(
+      Path.dirname(path),
+      root,
+      do_fetch_layouts(path, accumulator)
+    )
   end
 
   defp fetch_metadata(%{input_path: input_path, output_path: output_path} = index) do

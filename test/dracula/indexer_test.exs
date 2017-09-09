@@ -59,4 +59,17 @@ defmodule Dracula.IndexerTest do
       }
     }
   end
+
+  test "indexes a directory with a subdirectory and multiple layouts" do
+    assert Indexer.index("test/sub_layouts") == %{
+      "index.html" => %{
+        contents: "<!-- _layout.eex -->\n<!-- index.html -->\n\n",
+        metadata: [path: "/"]
+      },
+      "sub/index.html" => %{
+        contents: "<!-- _layout.eex -->\n<!-- sub/_layout.eex -->\n<!-- sub/index.html -->\n\n\n",
+        metadata: [path: "/sub/"]
+      }
+    }
+  end
 end
