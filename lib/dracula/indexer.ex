@@ -30,20 +30,20 @@ defmodule Dracula.Indexer do
       |> String.starts_with?("_")
     end)
     |> Enum.map(fn(path) ->
-      index_path(path, Path.relative_to(path, root))
+      index_path(path, root, Path.relative_to(path, root))
     end)
     |> Enum.into(%{})
     |> Map.merge(sub_directory_index)
   end
 
-  defp index_path(path, relative_path) do
+  defp index_path(path, root, relative_path) do
     output_path = output_path_from_relative_path(relative_path)
 
-    index = %{input_path: path, output_path: output_path}
+    index = %{input_path: path, output_path: output_path, root_path: root}
     |> fetch_layout
     |> fetch_metadata
     |> render_contents
-    |> Map.drop([:layouts, :input_path, :output_path])
+    |> Map.drop([:layouts, :input_path, :output_path, :root_path])
 
     {output_path, index}
   end
