@@ -7,8 +7,21 @@ defmodule Dracula.Indexer do
   @doc """
   Indexes a directory.
   """
-  def index(root) do
-    root
+  def index(root), do: index(root, root)
+
+  def index(directory, root) do
+    sub_directory_index = directory
+    |> Path.join("*")
+    |> Path.wildcard
+    |> Enum.filter(&File.dir?/1)
+    |> Enum.map(fn(path) ->
+      index(path, root)
+    end)
+    |> Enum.reduce(%{}, fn(index, accumulator) ->
+      Map.merge(index, accumulator)
+    end)
+
+    directory
     |> Path.join("*.{html,md,eex}")
     |> Path.wildcard
     |> Enum.reject(fn(path) ->
@@ -20,6 +33,7 @@ defmodule Dracula.Indexer do
       index_path(path, Path.relative_to(path, root))
     end)
     |> Enum.into(%{})
+    |> Map.merge(sub_directory_index)
   end
 
   defp index_path(path, relative_path) do

@@ -31,4 +31,11 @@ defmodule Dracula.IndexerTest do
       "index.html" => %{ contents: "<!-- index.eex -->\n" }
     }
   end
+
+  test "indexes a directory with a subdirectory" do
+    assert Indexer.index("test/subdirectory") == %{
+      "index.html" => %{ contents: "<!-- index.html -->\n" },
+      "sub/index.html" => %{ contents: "<!-- sub/index.html -->\n" }
+    }
+  end
 end
