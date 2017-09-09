@@ -11,6 +11,15 @@ defmodule Dracula.IndexerTest do
     }
   end
 
+  test "ignores _output directories" do
+    assert Indexer.index("test/with_output_directory") == %{
+      "index.html" => %{
+        contents: "<!-- index.html -->\n",
+        metadata: [path: "/"]
+      }
+    }
+  end
+
   test "indexes a directory with a markdown file" do
     assert Indexer.index("test/markdown_file") == %{
       "index.html" => %{

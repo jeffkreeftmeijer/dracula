@@ -14,6 +14,9 @@ defmodule Dracula.Indexer do
     |> Path.join("*")
     |> Path.wildcard
     |> Enum.filter(&File.dir?/1)
+    |> Enum.reject(fn(path) ->
+      Path.basename(path) == "_output"
+    end)
     |> Enum.map(fn(path) ->
       index(path, root)
     end)
