@@ -10,13 +10,8 @@ defmodule Dracula.Indexer do
   def index(root), do: index(root, root)
 
   def index(directory, root) do
-    sub_directory_index = directory
-    |> Path.join("*")
-    |> Path.wildcard
-    |> Enum.filter(&File.dir?/1)
-    |> Enum.reject(fn(path) ->
-      Path.basename(path) == "_output"
-    end)
+    subdirectory_index = directory
+    |> subdirectories
     |> Enum.map(fn(path) ->
       index(path, root)
     end)
@@ -25,18 +20,12 @@ defmodule Dracula.Indexer do
     end)
 
     directory
-    |> Path.join("*.{html,md,eex}")
-    |> Path.wildcard
-    |> Enum.reject(fn(path) ->
-      path
-      |> Path.basename
-      |> String.starts_with?("_")
-    end)
+    |> files
     |> Enum.map(fn(path) ->
       index_path(path, root, Path.relative_to(path, root))
     end)
     |> Enum.into(%{})
-    |> Map.merge(sub_directory_index)
+    |> Map.merge(subdirectory_index)
   end
 
   defp index_path(path, root, relative_path) do
@@ -49,6 +38,27 @@ defmodule Dracula.Indexer do
     |> Map.drop([:layouts, :input_path, :output_path, :root_path])
 
     {output_path, index}
+  end
+
+  defp subdirectories(directory) do
+    directory
+    |> Path.join("*")
+    |> Path.wildcard
+    |> Enum.filter(&File.dir?/1)
+    |> Enum.reject(fn(path) ->
+      Path.basename(path) == "_output"
+    end)
+  end
+
+  defp files(directory) do
+    directory
+    |> Path.join("*.{html,md,eex}")
+    |> Path.wildcard
+    |> Enum.reject(fn(path) ->
+      path
+      |> Path.basename
+      |> String.starts_with?("_")
+    end)
   end
 
   defp output_path_from_relative_path(path) do
