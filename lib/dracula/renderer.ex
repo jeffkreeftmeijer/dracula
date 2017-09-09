@@ -8,15 +8,16 @@ defmodule Dracula.Renderer do
   """
   def render(contents, extname, metadata \\ [], layouts \\ [])
   def render(contents, ".eex", metadata, layouts) do
-    render(EEx.eval_string(contents, assigns: metadata), ".html", layouts)
+    render(EEx.eval_string(contents, assigns: metadata), ".html", metadata, layouts)
   end
-  def render(contents, ".md", _metadata, layouts) do
+  def render(contents, ".md", metadata, layouts) do
     render(
       Earmark.as_html!(contents, %Earmark.Options{
         footnotes: true,
         heading_anchors: true
       }),
       ".html",
+      metadata,
       layouts
     )
   end

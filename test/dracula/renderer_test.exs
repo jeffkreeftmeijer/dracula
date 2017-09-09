@@ -35,6 +35,15 @@ defmodule Dracula.RendererTest do
       ~s{<p>foot … <a href=\"#fn:1\" id=\"fnref:1\" class=\"footnote\" title=\"see footnote\">1</a></p>\n<div class=\"footnotes\">\n<hr>\n<ol>\n<li id=\"fn:1\"><p>… note!&nbsp;<a href=\"#fnref:1\" title=\"return to article\" class=\"reversefootnote\">&#x21A9;</a></p>\n</li>\n</ol>\n\n</div>}
   end
 
+  test "renders a markdown page with a layout" do
+    assert Renderer.render(
+      "<!-- index.md -->\n",
+      ".md",
+      [],
+      ["<!-- _layout.eex -->\n<%= @contents %>"]
+    ) == "<!-- _layout.eex -->\n<!-- index.md -->"
+  end
+
   test "renders an EEx page" do
     assert Renderer.render(
       ~s{<%= "index.eex" %>},
@@ -48,5 +57,14 @@ defmodule Dracula.RendererTest do
       ".eex",
       [title: "index.eex"]
     ) == "index.eex"
+  end
+
+  test "renders an EEx page with a layout" do
+    assert Renderer.render(
+      "<!-- index.eex -->\n",
+      ".eex",
+      [],
+      ["<!-- _layout.eex -->\n<%= @contents %>"]
+    ) == "<!-- _layout.eex -->\n<!-- index.eex -->\n"
   end
 end
