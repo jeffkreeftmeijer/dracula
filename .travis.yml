@@ -1,0 +1,7 @@
+language: elixir
+otp_release:
+  - 20.0
+elixir:
+  - 1.5.1
+script:
+  - mix test
