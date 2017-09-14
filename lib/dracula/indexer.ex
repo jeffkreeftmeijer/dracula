@@ -2,7 +2,7 @@ defmodule Dracula.Indexer do
   @moduledoc """
   Indexes source directories.
   """
-  alias Dracula.Renderer
+  alias Dracula.{Renderer, Extractor}
 
   @doc """
   Indexes a directory.
@@ -114,7 +114,7 @@ defmodule Dracula.Indexer do
     )
   end
 
-  defp fetch_metadata(%{input_path: input_path, output_path: output_path} = index) do
+  defp fetch_metadata(%{input_path: input_path, output_path: output_path, contents: contents} = index) do
     metadata = case input_path
     |> Path.dirname
     |> Path.join("_metadata.yml")
@@ -129,6 +129,15 @@ defmodule Dracula.Indexer do
     end
     |> Keyword.merge([path: path_from_output_path(output_path)])
 
+    metadata = contents
+    |> Extractor.extract_metadata
+    |> Keyword.merge(metadata)
+
     Map.put(index, :metadata, metadata)
+  end
+
+  defp extract_metadata(%{contents: contents} = index) do
+    IO.inspect contents
+    index
   end
 end

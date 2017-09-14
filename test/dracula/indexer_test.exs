@@ -6,7 +6,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/single_file") == %{
       "index.html" => %{
         contents: "<!-- index.html -->\n",
-        metadata: [path: "/"]
+        metadata: [title: nil, path: "/"]
       }
     }
   end
@@ -15,7 +15,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/with_output_directory") == %{
       "index.html" => %{
         contents: "<!-- index.html -->\n",
-        metadata: [path: "/"]
+        metadata: [title: nil, path: "/"]
       }
     }
   end
@@ -24,7 +24,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/markdown_file") == %{
       "index.html" => %{
         contents: "<!-- index.md -->",
-        metadata: [path: "/"]
+        metadata: [title: nil, path: "/"]
       }
     }
   end
@@ -33,7 +33,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/file_with_layout") == %{
       "index.html" => %{
         contents: "<!-- layout -->\n<!-- index.html -->\n\n",
-        metadata: [path: "/"]
+        metadata: [title: nil, path: "/"]
       }
     }
   end
@@ -42,7 +42,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/eex_file") == %{
       "index.html" => %{
         contents: "<!-- index.eex -->\n",
-        metadata: [path: "/"]
+        metadata: [title: nil, path: "/"]
       }
     }
   end
@@ -60,11 +60,11 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/subdirectory") == %{
       "index.html" => %{
         contents: "<!-- index.html -->\n",
-        metadata: [path: "/"]
+        metadata: [title: nil, path: "/"]
       },
       "sub/index.html" => %{
         contents: "<!-- sub/index.html -->\n",
-        metadata: [path: "/sub/"]
+        metadata: [title: nil, path: "/sub/"]
       }
     }
   end
@@ -73,11 +73,20 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/sub_layouts") == %{
       "index.html" => %{
         contents: "<!-- _layout.eex -->\n<!-- index.html -->\n\n",
-        metadata: [path: "/"]
+        metadata: [title: nil, path: "/"]
       },
       "sub/index.html" => %{
         contents: "<!-- _layout.eex -->\n<!-- sub/_layout.eex -->\n<!-- sub/index.html -->\n\n\n",
-        metadata: [path: "/sub/"]
+        metadata: [title: nil, path: "/sub/"]
+      }
+    }
+  end
+
+  test "indexes a file with extractable metadata" do
+    assert Indexer.index("test/extractable_metadata") == %{
+      "index.html" => %{
+        contents: "<a id=\"indexhtml\"></a><h1>index.html</h1>\n",
+        metadata: [title: "index.html", path: "/"]
       }
     }
   end
