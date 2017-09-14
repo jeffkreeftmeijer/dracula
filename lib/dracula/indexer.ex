@@ -33,6 +33,7 @@ defmodule Dracula.Indexer do
 
     index = %{input_path: path, output_path: output_path, root_path: root}
     |> fetch_layouts
+    |> fetch_contents
     |> fetch_metadata
     |> render_contents
     |> Map.drop([:layouts, :input_path, :output_path, :root_path])
@@ -73,11 +74,16 @@ defmodule Dracula.Indexer do
     String.replace_trailing("/#{output_path}", "index.html", "")
   end
 
-  defp render_contents(%{input_path: input_path, layouts: layouts, metadata: metadata} = index) do
-    contents = input_path
-    |> File.read!
-    |> Renderer.render(Path.extname(input_path), metadata, layouts)
-Map.put(index, :contents, contents)
+  defp fetch_contents(%{input_path: input_path} = index) do
+    Map.put(index, :contents, File.read!(input_path))
+  end
+
+  defp render_contents(%{input_path: input_path, layouts: layouts, metadata: metadata, contents: contents} = index) do
+    Map.put(
+      index,
+      :contents,
+      Renderer.render(contents, Path.extname(input_path), metadata, layouts)
+    )
   end
 
   defp fetch_layouts(%{input_path: input_path, root_path: root_path} = index) do
