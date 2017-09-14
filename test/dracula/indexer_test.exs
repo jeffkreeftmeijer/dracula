@@ -6,7 +6,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/single_file") == %{
       "index.html" => %{
         contents: "<!-- index.html -->\n",
-        metadata: [title: nil, path: "/"]
+        metadata: [path: "/"]
       }
     }
   end
@@ -15,7 +15,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/with_output_directory") == %{
       "index.html" => %{
         contents: "<!-- index.html -->\n",
-        metadata: [title: nil, path: "/"]
+        metadata: [path: "/"]
       }
     }
   end
@@ -24,7 +24,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/markdown_file") == %{
       "index.html" => %{
         contents: "<!-- index.md -->",
-        metadata: [title: nil, path: "/"]
+        metadata: [path: "/"]
       }
     }
   end
@@ -33,7 +33,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/file_with_layout") == %{
       "index.html" => %{
         contents: "<!-- layout -->\n<!-- index.html -->\n\n",
-        metadata: [title: nil, path: "/"]
+        metadata: [path: "/"]
       }
     }
   end
@@ -42,7 +42,7 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/eex_file") == %{
       "index.html" => %{
         contents: "<!-- index.eex -->\n",
-        metadata: [title: nil, path: "/"]
+        metadata: [path: "/"]
       }
     }
   end
@@ -60,11 +60,11 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/subdirectory") == %{
       "index.html" => %{
         contents: "<!-- index.html -->\n",
-        metadata: [title: nil, path: "/"]
+        metadata: [path: "/"]
       },
       "sub/index.html" => %{
         contents: "<!-- sub/index.html -->\n",
-        metadata: [title: nil, path: "/sub/"]
+        metadata: [path: "/sub/"]
       }
     }
   end
@@ -73,11 +73,11 @@ defmodule Dracula.IndexerTest do
     assert Indexer.index("test/sub_layouts") == %{
       "index.html" => %{
         contents: "<!-- _layout.eex -->\n<!-- index.html -->\n\n",
-        metadata: [title: nil, path: "/"]
+        metadata: [path: "/"]
       },
       "sub/index.html" => %{
         contents: "<!-- _layout.eex -->\n<!-- sub/_layout.eex -->\n<!-- sub/index.html -->\n\n\n",
-        metadata: [title: nil, path: "/sub/"]
+        metadata: [path: "/sub/"]
       }
     }
   end
