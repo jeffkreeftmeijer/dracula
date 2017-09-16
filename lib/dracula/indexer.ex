@@ -31,12 +31,17 @@ defmodule Dracula.Indexer do
   defp index_path(path, root, relative_path) do
     output_path = output_path_from_relative_path(relative_path)
 
-    index = %{input_path: path, output_path: output_path, root_path: root}
+    index = %{
+      input_path: path,
+      input_directory: Path.dirname(path),
+      output_path: output_path,
+      root_path: root
+    }
     |> fetch_layouts
     |> fetch_contents
     |> fetch_metadata
     |> render_contents
-    |> Map.drop([:layouts, :input_path, :output_path, :root_path])
+    |> Map.drop([:layouts, :input_path, :output_path, :root_path, :input_directory])
 
     {output_path, index}
   end
@@ -86,37 +91,35 @@ defmodule Dracula.Indexer do
     )
   end
 
-  defp fetch_layouts(%{input_path: input_path, root_path: root_path} = index) do
-    layouts = input_path
-    |> Path.dirname
+  defp fetch_layouts(%{input_directory: directory, root_path: root_path} = index) do
+    layouts = directory
     |> do_fetch_layouts(root_path, [])
     |> Enum.reverse
 
     Map.put(index, :layouts, layouts)
   end
 
-  defp do_fetch_layouts(path, accumulator) do
-    do_fetch_layouts(path, path, accumulator)
+  defp do_fetch_layouts(directory, accumulator) do
+    do_fetch_layouts(directory, directory, accumulator)
   end
-  defp do_fetch_layouts(path, path, accumulator) do
-    case path
+  defp do_fetch_layouts(directory, directory, accumulator) do
+    case directory
     |> Path.join("_layout.eex")
     |> File.read do
       {:ok, layout} -> [layout|accumulator]
       _ -> accumulator
     end
   end
-  defp do_fetch_layouts(path, root, accumulator) do
+  defp do_fetch_layouts(directory, root, accumulator) do
     do_fetch_layouts(
-      Path.dirname(path),
+      Path.dirname(directory),
       root,
-      do_fetch_layouts(path, accumulator)
+      do_fetch_layouts(directory, accumulator)
     )
   end
 
-  defp fetch_metadata(%{input_path: input_path, output_path: output_path, contents: contents} = index) do
-    metadata = case input_path
-    |> Path.dirname
+  defp fetch_metadata(%{input_directory: directory, output_path: output_path, contents: contents} = index) do
+    metadata = case directory
     |> Path.join("_metadata.yml")
     |> File.read do
       {:ok, metadata} ->
