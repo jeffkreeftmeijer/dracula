@@ -135,9 +135,4 @@ defmodule Dracula.Indexer do
 
     Map.put(index, :metadata, metadata)
   end
-
-  defp extract_metadata(%{contents: contents} = index) do
-    IO.inspect contents
-    index
-  end
 end
