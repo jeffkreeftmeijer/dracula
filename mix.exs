@@ -22,7 +22,8 @@ defmodule Dracula.Mixfile do
   defp deps do
     [
       {:earmark, github: "jeffkreeftmeijer/earmark", branch: "heading-anchors"},
-      {:yaml_elixir, "~> 1.3.0"}
+      {:yaml_elixir, "~> 1.3.0"},
+      {:credo, "~> 0.8", only: [:dev, :test], runtime: false}
     ]
   end
 end
