@@ -4,4 +4,4 @@ otp_release:
 elixir:
   - 1.5.1
 script:
-  - mix test
+  - mix test && mix credo
