@@ -123,22 +123,22 @@ defmodule Dracula.Indexer do
   end
 
   defp fetch_metadata(%{input_directory: directory, output_path: output_path, contents: contents} = index) do
-    metadata = case directory
+    custom_metadata = case directory
     |> Path.join("_metadata.yml")
     |> File.read do
-      {:ok, metadata} ->
-        metadata
+      {:ok, yaml} ->
+        yaml
         |> YamlElixir.read_from_string
         |> Enum.map(fn({key, value}) ->
           {String.to_atom(key), value}
         end)
       _ -> []
     end
-    |> Keyword.merge([path: path_from_output_path(output_path)])
 
     metadata = contents
     |> Extractor.extract_metadata
-    |> Keyword.merge(metadata)
+    |> Keyword.merge(custom_metadata)
+    |> Keyword.merge([path: path_from_output_path(output_path)])
 
     Map.put(index, :metadata, metadata)
   end
