@@ -29,6 +29,15 @@ defmodule Dracula.IndexerTest do
     }
   end
 
+  test "indexes a directory with a markdown file that's named after its directory" do
+    assert Indexer.index("test/markdown_file_with_dirname") == %{
+      "sub/index.html" => %{
+        contents: "<!-- sub/sub.md -->",
+        metadata: [path: "/sub/"]
+      }
+    }
+  end
+
   test "indexes a directory with a layout file" do
     assert Indexer.index("test/file_with_layout") == %{
       "index.html" => %{
