@@ -41,7 +41,7 @@ defmodule Dracula.Indexer do
     |> fetch_contents
     |> fetch_metadata
     |> render_contents
-    |> Map.drop([:layouts, :input_path, :output_path, :root_path, :input_directory])
+    |> Map.drop(~w(layouts input_path output_path root_path input_directory)a)
 
     {output_path, index}
   end
