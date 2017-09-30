@@ -35,6 +35,11 @@ defmodule Dracula.RendererTest do
       ~s{<p>foot … <a href=\"#fn:1\" id=\"fnref:1\" class=\"footnote\" title=\"see footnote\">1</a></p>\n<div class=\"footnotes\">\n<hr>\n<ol>\n<li id=\"fn:1\"><p>… note!&nbsp;<a href=\"#fnref:1\" title=\"return to article\" class=\"reversefootnote\">&#x21A9;</a></p>\n</li>\n</ol>\n\n</div>}
   end
 
+  test "renders a markdown page, with a fenced code block" do
+    assert Renderer.render("```ruby\n  puts 'foo'\nend", ".md") ==
+      ~s{<pre><code class=\"ruby language-ruby\">  puts &#39;foo&#39;\nend</code></pre>\n}
+  end
+
   test "renders a markdown page with a layout" do
     assert Renderer.render(
       "<!-- index.md -->\n",

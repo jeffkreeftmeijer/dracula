@@ -14,7 +14,8 @@ defmodule Dracula.Renderer do
     render(
       Earmark.as_html!(contents, %Earmark.Options{
         footnotes: true,
-        heading_anchors: true
+        heading_anchors: true,
+        code_class_prefix: "language-"
       }),
       ".html",
       metadata,
