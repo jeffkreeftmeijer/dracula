@@ -69,13 +69,19 @@ defmodule Dracula.Indexer do
 
   defp output_path_from_relative_path(path) do
     extname =  Path.extname(path)
+    dirname = Path.dirname(path)
 
-    case [Path.basename(path, extname) == Path.dirname(path), extname] do
-      [true, _] ->
-        String.replace_trailing(path, Path.basename(path), "index.html")
-      [_, ".md"] -> String.replace_trailing(path, ".md", ".html")
-      [_, ".eex"] -> String.replace_trailing(path, ".eex", ".html")
+    output_path = case String.split(path, "/") do
+      ["_" <> _ = strip|_] -> String.replace_leading(path, strip <> "/", "")
       _ -> path
+    end
+
+    case [Path.basename(output_path, extname) == dirname, extname] do
+      [true, _] ->
+        String.replace_trailing(output_path, Path.basename(output_path), "index.html")
+      [_, ".md"] -> String.replace_trailing(output_path, ".md", ".html")
+      [_, ".eex"] -> String.replace_trailing(output_path, ".eex", ".html")
+      _ -> output_path
     end
   end
 

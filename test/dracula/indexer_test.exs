@@ -99,4 +99,30 @@ defmodule Dracula.IndexerTest do
       }
     }
   end
+
+  test "indexes a directory with a resource" do
+    assert Indexer.index("test/resource") == %{
+      "index.html" => %{
+        contents: "<!-- index.html -->\n",
+        metadata: [path: "/"]
+      },
+      "sub/index.html" => %{
+        contents: "<!-- sub/index.html -->\n",
+        metadata: [path: "/sub/"]
+      }
+    }
+  end
+
+  test "indexes a directory with a resource with a layout" do
+    assert Indexer.index("test/resource_with_layout") == %{
+      "index.html" => %{
+        contents: "<!-- _layout.eex -->\n<!-- index.html -->\n\n",
+        metadata: [path: "/"]
+      },
+      "sub/index.html" => %{
+        contents: "<!-- _layout.eex -->\n<!-- sub/_layout.eex -->\n<!-- sub/index.html -->\n\n\n",
+        metadata: [path: "/sub/"]
+      }
+    }
+  end
 end
