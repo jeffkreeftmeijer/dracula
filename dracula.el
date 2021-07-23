@@ -8,6 +8,7 @@
 	 :base-extension "org"
 	 :publishing-directory "_output"
 	 :recursive t
-	 :publishing-function org-html-clean-publish-to-html)))
+	 :publishing-function org-html-clean-publish-to-html
+	 :html-doctype "html5")))
 
 (provide 'dracula)
