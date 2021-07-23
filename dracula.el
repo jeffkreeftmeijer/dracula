@@ -10,6 +10,7 @@
 	 :recursive t
 	 :publishing-function org-html-clean-publish-to-html
 	 :html-doctype "html5"
-	 :html-head-include-default-style nil)))
+	 :html-head-include-default-style nil
+	 :html-head-include-scripts nil)))
 
 (provide 'dracula)
