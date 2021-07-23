@@ -12,6 +12,7 @@
 	 :html-doctype "html5"
 	 :html-head-include-default-style nil
 	 :html-head-include-scripts nil
+	 :html-html5-fancy t
 	 :with-toc nil)))
 
 (provide 'dracula)

@@ -33,6 +33,16 @@ Generates blogs from org files.
        (should (string-match-p "<!doctype html>" (dracula-test-published-file-contents))))
    #+end_src
 
+** HTML5 elements
+
+   Dracula uses HTML5 elements, supporting tags like =<aside>= and =<figure>=.
+
+   #+begin_src emacs-lisp :noweb-ref fancy
+     (ert-deftest dracula-test-doctype ()
+       "Uses html5 elements."
+       (should (string-match-p "</aside>" (dracula-test-published-file-contents))))
+   #+end_src
+
 ** Default stylesheets and scripts
 
    Dracula doesn't include the default stylesheets and scripts.
@@ -80,6 +90,8 @@ Generates blogs from org files.
      <<index-filenames>>
 
      <<doctype>>
+
+     <<fancy>>
 
      <<default-stylesheet-and-javascript>>
 
