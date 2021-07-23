@@ -4,7 +4,7 @@
   "Exports as index.html files to the _output directory."
   (delete-directory "_output" t)
   (org-publish-project "dracula-html" t)
-  (should (string-match-p "Dracula" (dracula-test-file-contents "_output/README/index.html"))))
+  (should (file-exists-p "_output/README/index.html")))
 
 (ert-deftest dracula-test-doctype ()
   "Uses the html5 doctype for published HTML files."
