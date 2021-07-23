@@ -8,12 +8,15 @@
 
 (ert-deftest dracula-test-doctype ()
   "Uses the html5 doctype for published HTML files."
-  (delete-directory "_output" t)
-  (org-publish-project "dracula-html" t)
-  (should (string-match-p "<!doctype html>" (dracula-test-file-contents "_output/README/index.html"))))
+  (should (string-match-p "<!doctype html>" (dracula-test-published-file-contents))))
 
 (defun dracula-test-file-contents (filename)
   "Return the contents of FILENAME."
   (with-temp-buffer
     (insert-file-contents filename)
     (buffer-string)))
+
+(defun dracula-test-published-file-contents ()
+  (delete-directory "_output" t)
+  (org-publish-project "dracula-html" t)
+  (dracula-test-file-contents "_output/README/index.html"))
