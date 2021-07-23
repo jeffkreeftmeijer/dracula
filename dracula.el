@@ -9,6 +9,7 @@
 	 :publishing-directory "_output"
 	 :recursive t
 	 :publishing-function org-html-clean-publish-to-html
-	 :html-doctype "html5")))
+	 :html-doctype "html5"
+	 :html-head-include-default-style nil)))
 
 (provide 'dracula)

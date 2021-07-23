@@ -10,6 +10,10 @@
   "Uses the html5 doctype for published HTML files."
   (should (string-match-p "<!doctype html>" (dracula-test-published-file-contents))))
 
+(ert-deftest dracula-test-default-stylesheet ()
+  "Does not include the default stylesheet"
+  (should (not (string-match-p "<style type=\"text/css\">" (dracula-test-published-file-contents)))))
+
 (defun dracula-test-file-contents (filename)
   "Return the contents of FILENAME."
   (with-temp-buffer
