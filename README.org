@@ -1,0 +1,19 @@
+#+title: Dracula
+
+Generates blogs from org files.
+
+** Tests
+
+   To run the tests [[https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-Interactively.html][interactively]], load [[file:dracula.el][dracula.el]] and [[file:dracula-tests.el][dracula-tests.el]], then run =ert=:
+
+   #+begin_src emacs-lisp
+     (load (concat default-directory "dracula.el"))
+     (load (concat default-directory "dracula-tests.el"))
+     (ert t)
+   #+end_src
+
+   To run the tests in [[https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-in-Batch-Mode.html][batch mode]] (recommended), load [[file:dracula.el][dracula.el]] and [[file:dracula-tests.el][dracula-tests.el]], then run =ert-run-tests-batch-and-exit= from the command line:
+
+   #+begin_src emacs-lisp
+     emacs -batch -l ert -l dracula.el -l dracula-tests.el -f ert-run-tests-batch-and-exit
+   #+end_src
