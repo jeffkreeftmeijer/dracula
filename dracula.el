@@ -13,6 +13,7 @@
 	 :html-head-include-default-style nil
 	 :html-head-include-scripts nil
 	 :html-html5-fancy t
+	 :section-numbers nil
 	 :with-toc nil)))
 
 (provide 'dracula)

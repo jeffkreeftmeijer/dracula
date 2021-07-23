@@ -25,6 +25,10 @@
   "Does not include the default javascript"
   (should (not (string-match-p "<script type=\"text/javascript\">" (dracula-test-published-file-contents)))))
 
+(ert-deftest dracula-test-section-numbers ()
+  "Does not include section numbers"
+  (should (string-match-p ">A headline</h2>" (dracula-test-published-file-contents))))
+
 (ert-deftest dracula-test-table-of-contents ()
   "Does not include the table of contents"
   (should (not (string-match-p "Table of Contents" (dracula-test-published-file-contents)))))

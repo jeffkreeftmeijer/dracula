@@ -57,11 +57,15 @@ Generates blogs from org files.
        (should (not (string-match-p "<script type=\"text/javascript\">" (dracula-test-published-file-contents)))))
    #+end_src
 
-** Table of contents
+** Section numbers and table of contents
 
-   Dracula does not include a table of contents by default.
+   Dracula does not include section numbers or a table of contents by default.
 
    #+begin_src emacs-lisp :noweb-ref table-of-contents
+     (ert-deftest dracula-test-section-numbers ()
+       "Does not include section numbers"
+       (should (string-match-p ">A headline</h2>" (dracula-test-published-file-contents))))
+
      (ert-deftest dracula-test-table-of-contents ()
        "Does not include the table of contents"
        (should (not (string-match-p "Table of Contents" (dracula-test-published-file-contents)))))
