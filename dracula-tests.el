@@ -18,6 +18,10 @@
   "Does not include the default javascript"
   (should (not (string-match-p "<script type=\"text/javascript\">" (dracula-test-published-file-contents)))))
 
+(ert-deftest dracula-test-table-of-contents ()
+  "Does not include the table of contents"
+  (should (not (string-match-p "Table of Contents" (dracula-test-published-file-contents)))))
+
 (defun dracula-test-file-contents (filename)
   "Return the contents of FILENAME."
   (with-temp-buffer
