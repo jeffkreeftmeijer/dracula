@@ -2,9 +2,8 @@
 
 (ert-deftest dracula-test-index-filenames ()
   "Exports as index.html files to the _output directory."
-  (delete-directory "_output" t)
-  (org-publish-project "dracula-html" t)
-  (should (file-exists-p "_output/README/index.html")))
+  (dracula-test-publish-html)
+  (should (file-exists-p "fixtures/_output/hello/index.html")))
 
 (ert-deftest dracula-test-doctype ()
   "Uses the html5 doctype for published HTML files."
@@ -29,6 +28,12 @@
     (buffer-string)))
 
 (defun dracula-test-published-file-contents ()
-  (delete-directory "_output" t)
-  (org-publish-project "dracula-html" t)
-  (dracula-test-file-contents "_output/README/index.html"))
+  (dracula-test-publish-html)
+  (dracula-test-file-contents "fixtures/_output/hello/index.html"))
+
+(defun dracula-test-publish-html ()
+  (let ((root default-directory))
+    (cd (concat root "fixtures"))
+    (delete-directory "_output" t)
+    (org-publish-project "dracula-html" t)
+    (cd root)))
