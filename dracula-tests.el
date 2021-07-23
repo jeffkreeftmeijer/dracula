@@ -3,7 +3,11 @@
 (ert-deftest dracula-test-index-filenames ()
   "Exports as index.html files to the _output directory."
   (dracula-test-publish-html)
-  (should (file-exists-p "fixtures/_output/hello/index.html")))
+  (should (file-exists-p "fixtures/_output/index.html"))
+  (should (file-exists-p "fixtures/_output/hello/index.html"))
+  (should (file-exists-p "fixtures/_output/foo/index.html"))
+  (should (file-exists-p "fixtures/_output/bar/index.html"))
+  (should (file-exists-p "fixtures/_output/bar/baz/index.html")))
 
 (ert-deftest dracula-test-doctype ()
   "Uses the html5 doctype for published HTML files."
