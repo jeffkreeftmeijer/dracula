@@ -1,0 +1,3 @@
+[submodule "vendor/org-export-html-clean"]
+	path = vendor/org-export-html-clean
+	url = git@github.com:jschaf/org-export-html-clean.git
