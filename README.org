@@ -2,6 +2,61 @@
 
 Generates blogs from org files.
 
+** HTML export file names
+
+   Instead of replacing the =.org= extension with an =.html= one, Dracula hides filenames through directories:
+
+   - A file named =index.org= is exported as =index.html= to produce  =/=
+   - A file named =foo.org= is exported as =foo/index.html= to produce  =/foo/=
+   - A file named =foo/index.org= is exported as =foo/index.html= to produce  =/foo/=
+   - A file named =foo/foo.org= is exported as =foo/index.html= to produce  =/foo/=
+   - A file named =foo/bar.org= is exported as =foo/bar/index.html= to produce  =/foo/bar/=
+
+   #+begin_src emacs-lisp :noweb-ref index-filenames
+     (ert-deftest dracula-test-index-filenames ()
+       "Exports as index.html files to the _output directory."
+       (dracula-test-publish-html)
+       (should (file-exists-p "fixtures/_output/index.html"))
+       (should (file-exists-p "fixtures/_output/hello/index.html"))
+       (should (file-exists-p "fixtures/_output/foo/index.html"))
+       (should (file-exists-p "fixtures/_output/bar/index.html"))
+       (should (file-exists-p "fixtures/_output/bar/baz/index.html")))
+   #+end_src
+
+** HTML5 doctype
+
+   Dracula chooses the HTML5 doctype by default.
+
+   #+begin_src emacs-lisp :noweb-ref doctype
+     (ert-deftest dracula-test-doctype ()
+       "Uses the html5 doctype for published HTML files."
+       (should (string-match-p "<!doctype html>" (dracula-test-published-file-contents))))
+   #+end_src
+
+** Default stylesheets and scripts
+
+   Dracula doesn't include the default stylesheets and scripts.
+
+   #+begin_src emacs-lisp :noweb-ref default-stylesheet-and-javascript
+     (ert-deftest dracula-test-default-stylesheet ()
+       "Does not include the default stylesheet"
+       (should (not (string-match-p "<style type=\"text/css\">" (dracula-test-published-file-contents)))))
+
+     (ert-deftest dracula-test-default-javascript ()
+       "Does not include the default javascript"
+       (should (not (string-match-p "<script type=\"text/javascript\">" (dracula-test-published-file-contents)))))
+   #+end_src
+
+** Table of contents
+
+   Dracula does not include a table of contents by default.
+
+   #+begin_src emacs-lisp :noweb-ref table-of-contents
+     (ert-deftest dracula-test-table-of-contents ()
+       "Does not include the table of contents"
+       (should (not (string-match-p "Table of Contents" (dracula-test-published-file-contents)))))
+   #+end_src
+
 ** Tests
 
    To run the tests [[https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-Interactively.html][interactively]], load [[file:vendor/org-export-html-clean/ox-html-clean.el][ox-html-clean.el]], [[file:dracula.el][dracula.el]] and [[file:dracula-tests.el][dracula-tests.el]], then run =ert=:
@@ -17,4 +72,33 @@ Generates blogs from org files.
 
    #+begin_src emacs-lisp
      emacs -batch -l ert -l vendor/org-export-html-clean/ox-html-clean.el -l dracula.el -l dracula-tests.el -f ert-run-tests-batch-and-exit
+   #+end_src
+
+   #+begin_src emacs-lisp :noweb yes :exports none :tangle dracula-tests.el
+     (require 'dracula)
+
+     <<index-filenames>>
+
+     <<doctype>>
+
+     <<default-stylesheet-and-javascript>>
+
+     <<table-of-contents>>
+
+     (defun dracula-test-file-contents (filename)
+       "Return the contents of FILENAME."
+       (with-temp-buffer
+	 (insert-file-contents filename)
+	 (buffer-string)))
+
+     (defun dracula-test-published-file-contents ()
+       (dracula-test-publish-html)
+       (dracula-test-file-contents "fixtures/_output/hello/index.html"))
+
+     (defun dracula-test-publish-html ()
+       (let ((root default-directory))
+	 (cd (concat root "fixtures"))
+	 (delete-directory "_output" t)
+	 (org-publish-project "dracula-html" t)
+	 (cd root)))
    #+end_src
