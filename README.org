@@ -38,7 +38,7 @@ Generates blogs from org files.
      (ert-deftest dracula-test-templates ()
        "Uses templates"
        (dracula-test-publish-html)
-       (should (string-match-p "<h1>With a template</h1>This page has a custom template" (dracula-test-file-contents "fixtures/_output/template/index.html"))))
+       (should (string-match-p "<h1>With a template</h1>\n<p>\nThis page has a custom template.\n</p>" (dracula-test-file-contents "fixtures/_output/template/index.html"))))
    #+end_src
 
 ** HTML5 doctype
