@@ -8,6 +8,11 @@
 	(templatel-render-string template `(("title" . ,(org-export-data (plist-get info :title) info))
 					    ("subtitle" . ,(org-export-data (plist-get info :subtitle) info))
 					    ("date" . ,(org-export-data (org-export-get-date info) info))
+
+					    ("date_updated" . ,(let ((file (plist-get info :input-file)))
+								 (format-time-string
+								  "%Y-%m-%d"
+								  (if file (nth 5 (file-attributes file)) (current-time)))))
 					    ("contents" . ,contents)
 					    ("head" . ,(org-element-normalize-string (plist-get info :html-head)))
 					    ("author" . ,(org-element-interpret-data
