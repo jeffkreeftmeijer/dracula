@@ -12,11 +12,13 @@
 							  (org-element-map (plist-get info :author)
 							      (cons 'plain-text org-element-all-objects)
 							    'identity info)))
-					    ("description" . ,(plist-get info :description))))
+					    ("description" . ,(plist-get info :description))
+					    ("twitter" . ,(plist-get info :twitter))))
       (org-html-template contents info))))
 
 (org-export-define-derived-backend 'dracula-html 'html-clean
-  :options-alist '((:html-template "HTML_TEMPLATE" nil nil newline))
+  :options-alist '((:html-template "HTML_TEMPLATE" nil nil newline)
+		   (:twitter "TWITTER" nil nil nil))
   :translate-alist '((template . org-dracula-html-template)))
 
 (defun org-dracula-html-publish-to-html (plist filename pub-dir)

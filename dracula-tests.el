@@ -16,7 +16,8 @@
     (should (string-match-p "<h1>With a template</h1>\n<p>\nThis page has a custom template.\n</p>" contents))
     (should (string-match-p "subtitle: A subtitle" contents))
     (should (string-match-p "author: Alice" contents))
-    (should (string-match-p "description: A page generated with a template" contents))))
+    (should (string-match-p "description: A page generated with a template" contents))
+    (should (string-match-p "twitter: @twitter" contents))))
 
 (ert-deftest dracula-test-doctype ()
   "Uses the html5 doctype for published HTML files."
