@@ -12,7 +12,7 @@
       (org-html-template contents info))))
 
 (org-export-define-derived-backend 'dracula-html 'html-clean
-  :options-alist '((:html-template "HTML_TEMPLATE" nil nil t))
+  :options-alist '((:html-template "HTML_TEMPLATE" nil nil newline))
   :translate-alist '((template . org-dracula-html-template)))
 
 (defun org-dracula-html-publish-to-html (plist filename pub-dir)

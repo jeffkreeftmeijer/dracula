@@ -29,7 +29,8 @@ Generates blogs from org files.
 
    #+begin_src org :tangle fixtures/template.org
      ,#+title: With a template
-     ,#+html_template: <h1>{{ title }}</h1>{{ contents }}
+     ,#+html_template: <h1>{{ title }}</h1>
+     ,#+html_template: {{ contents }}
 
      This page has a custom template.
    #+end_src
