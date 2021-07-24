@@ -8,6 +8,7 @@
 	(templatel-render-string template `(("title" . ,(org-export-data (plist-get info :title) info))
 					    ("subtitle" . ,(org-export-data (plist-get info :subtitle) info))
 					    ("contents" . ,contents)
+					    ("head" . ,(org-element-normalize-string (plist-get info :html-head)))
 					    ("author" . ,(org-element-interpret-data
 							  (org-element-map (plist-get info :author)
 							      (cons 'plain-text org-element-all-objects)

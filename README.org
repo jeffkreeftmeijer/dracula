@@ -35,6 +35,8 @@ Generates blogs from org files.
      ,#+html_link_home: http://example.com
      ,#+html_path: /template/
      ,#+twitter: twitter
+     ,#+html_head: <style></style>
+     ,#+html_template: {{ head }}
      ,#+html_template: <h1>{{ title }}</h1>
      ,#+html_template: {{ contents }}
      ,#+html_template: subtitle: {{ subtitle }}
@@ -58,7 +60,8 @@ Generates blogs from org files.
 	 (should (string-match-p "description: A page generated with a template" contents))
 	 (should (string-match-p "home: http://example.com" contents))
 	 (should (string-match-p "path: /template/" contents))
-	 (should (string-match-p "twitter: @twitter" contents))))
+	 (should (string-match-p "twitter: @twitter" contents))
+	 (should (string-match-p "<style></style>" contents))))
    #+end_src
 
 ** HTML5 doctype
