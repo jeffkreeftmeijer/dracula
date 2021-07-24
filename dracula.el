@@ -5,10 +5,9 @@
 (defun org-dracula-html-template (contents info)
   (let ((template (plist-get info :html-template)))
     (if template
-	(templatel-render-string template `(
-					    ("title" . ,(org-export-data (plist-get info :title) info))
+	(templatel-render-string template `(("title" . ,(org-export-data (plist-get info :title) info))
 					    ("contents" . ,contents)
-					    ))
+					    ("description" . ,(plist-get info :description))))
       (org-html-template contents info))))
 
 (org-export-define-derived-backend 'dracula-html 'html-clean

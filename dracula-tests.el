@@ -12,7 +12,9 @@
 (ert-deftest dracula-test-templates ()
   "Uses templates"
   (dracula-test-publish-html)
-  (should (string-match-p "<h1>With a template</h1><p>\nThis page has a custom template.\n</p>" (dracula-test-file-contents "fixtures/_output/template/index.html"))))
+  (let ((contents (dracula-test-file-contents "fixtures/_output/template/index.html")))
+    (should (string-match-p "<h1>With a template</h1>\n<p>\nThis page has a custom template.\n</p>" contents))
+    (should (string-match-p "description: A page generated with a template" contents))))
 
 (ert-deftest dracula-test-doctype ()
   "Uses the html5 doctype for published HTML files."

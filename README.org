@@ -29,8 +29,10 @@ Generates blogs from org files.
 
    #+begin_src org :tangle fixtures/template.org
      ,#+title: With a template
+     ,#+description: A page generated with a template
      ,#+html_template: <h1>{{ title }}</h1>
      ,#+html_template: {{ contents }}
+     ,#+html_template: description: {{ description }}
 
      This page has a custom template.
    #+end_src
@@ -39,7 +41,9 @@ Generates blogs from org files.
      (ert-deftest dracula-test-templates ()
        "Uses templates"
        (dracula-test-publish-html)
-       (should (string-match-p "<h1>With a template</h1>\n<p>\nThis page has a custom template.\n</p>" (dracula-test-file-contents "fixtures/_output/template/index.html"))))
+       (let ((contents (dracula-test-file-contents "fixtures/_output/template/index.html")))
+	 (should (string-match-p "<h1>With a template</h1>\n<p>\nThis page has a custom template.\n</p>" contents))
+	 (should (string-match-p "description: A page generated with a template" contents))))
    #+end_src
 
 ** HTML5 doctype
