@@ -3,9 +3,16 @@
 (require 'templatel)
 
 (defun org-dracula-html-template (contents info)
-  (org-html-template contents info))
+  (let ((template (plist-get info :html-template)))
+    (if template
+	(templatel-render-string template `(
+					    ("title" . ,(org-export-data (plist-get info :title) info))
+					    ("contents" . ,contents)
+					    ))
+      (org-html-template contents info))))
 
 (org-export-define-derived-backend 'dracula-html 'html-clean
+  :options-alist '((:html-template "HTML_TEMPLATE" nil nil t))
   :translate-alist '((template . org-dracula-html-template)))
 
 (defun org-dracula-html-publish-to-html (plist filename pub-dir)

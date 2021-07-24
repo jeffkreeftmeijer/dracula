@@ -9,6 +9,11 @@
   (should (file-exists-p "fixtures/_output/bar/index.html"))
   (should (file-exists-p "fixtures/_output/bar/baz/index.html")))
 
+(ert-deftest dracula-test-templates ()
+  "Uses templates"
+  (dracula-test-publish-html)
+  (should (string-match-p "<h1>With a template</h1><p>\nThis page has a custom template.\n</p>" (dracula-test-file-contents "fixtures/_output/template/index.html"))))
+
 (ert-deftest dracula-test-doctype ()
   "Uses the html5 doctype for published HTML files."
   (should (string-match-p "<!doctype html>" (dracula-test-published-file-contents))))
