@@ -7,6 +7,7 @@
     (if template
 	(templatel-render-string template `(("title" . ,(org-export-data (plist-get info :title) info))
 					    ("subtitle" . ,(org-export-data (plist-get info :subtitle) info))
+					    ("date" . ,(org-export-data (org-export-get-date info) info))
 					    ("contents" . ,contents)
 					    ("head" . ,(org-element-normalize-string (plist-get info :html-head)))
 					    ("author" . ,(org-element-interpret-data
