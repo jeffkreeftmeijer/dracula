@@ -13,11 +13,13 @@
 							      (cons 'plain-text org-element-all-objects)
 							    'identity info)))
 					    ("description" . ,(plist-get info :description))
+					    ("path" . ,(plist-get info :html-path))
 					    ("twitter" . ,(plist-get info :twitter))))
       (org-html-template contents info))))
 
 (org-export-define-derived-backend 'dracula-html 'html-clean
   :options-alist '((:html-template "HTML_TEMPLATE" nil nil newline)
+		   (:html-path "HTML_PATH" nil nil nil)
 		   (:twitter "TWITTER" nil nil nil))
   :translate-alist '((template . org-dracula-html-template)))
 
