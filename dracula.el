@@ -7,6 +7,10 @@
     (if template
 	(templatel-render-string template `(("title" . ,(org-export-data (plist-get info :title) info))
 					    ("contents" . ,contents)
+					    ("author" . ,(org-element-interpret-data
+							  (org-element-map (plist-get info :author)
+							      (cons 'plain-text org-element-all-objects)
+							    'identity info)))
 					    ("description" . ,(plist-get info :description))))
       (org-html-template contents info))))
 
