@@ -6,6 +6,7 @@
   (let ((template (plist-get info :html-template)))
     (if template
 	(templatel-render-string template `(("title" . ,(org-export-data (plist-get info :title) info))
+					    ("subtitle" . ,(org-export-data (plist-get info :subtitle) info))
 					    ("contents" . ,contents)
 					    ("author" . ,(org-element-interpret-data
 							  (org-element-map (plist-get info :author)

@@ -29,10 +29,12 @@ Generates blogs from org files.
 
    #+begin_src org :tangle fixtures/template.org
      ,#+title: With a template
+     ,#+subtitle: A subtitle
      ,#+description: A page generated with a template
      ,#+author: Alice
      ,#+html_template: <h1>{{ title }}</h1>
      ,#+html_template: {{ contents }}
+     ,#+html_template: subtitle: {{ subtitle }}
      ,#+html_template: description: {{ description }}
      ,#+html_template: author: {{ author }}
 
@@ -45,6 +47,7 @@ Generates blogs from org files.
        (dracula-test-publish-html)
        (let ((contents (dracula-test-file-contents "fixtures/_output/template/index.html")))
 	 (should (string-match-p "<h1>With a template</h1>\n<p>\nThis page has a custom template.\n</p>" contents))
+	 (should (string-match-p "subtitle: A subtitle" contents))
 	 (should (string-match-p "author: Alice" contents))
 	 (should (string-match-p "description: A page generated with a template" contents))))
    #+end_src
