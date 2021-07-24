@@ -1,5 +1,6 @@
 (require 'ox-publish)
 (require 'ox-html-clean)
+(require 'templatel)
 
 (setq org-publish-project-alist
       '(

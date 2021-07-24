@@ -73,7 +73,7 @@ Generates blogs from org files.
 
 ** Tests
 
-   To run the tests [[https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-Interactively.html][interactively]], load [[file:vendor/org-export-html-clean/ox-html-clean.el][ox-html-clean.el]], [[file:dracula.el][dracula.el]] and [[file:dracula-tests.el][dracula-tests.el]], then run =ert=:
+   To run the tests [[https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-Interactively.html][interactively]], install [[https://github.com/clarete/templatel][templatel]], then load [[file:vendor/org-export-html-clean/ox-html-clean.el][ox-html-clean.el]], [[file:dracula.el][dracula.el]] and [[file:dracula-tests.el][dracula-tests.el]], and run =ert=:
 
    #+begin_src emacs-lisp
      (load (concat default-directory "vendor/org-export-html-clean/ox-html-clean.el"))
@@ -82,10 +82,10 @@ Generates blogs from org files.
      (ert t)
    #+end_src
 
-   To run the tests in [[https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-in-Batch-Mode.html][batch mode]] (recommended), load [[file:vendor/org-export-html-clean/ox-html-clean.el][ox-html-clean.el]], [[file:dracula.el][dracula.el]] and [[file:dracula-tests.el][dracula-tests.el]], then run =ert-run-tests-batch-and-exit= from the command line:
+   To run the tests in [[https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-in-Batch-Mode.html][batch mode]] (recommended), install [[https://github.com/clarete/templatel][templatel]], then load [[file:vendor/org-export-html-clean/ox-html-clean.el][ox-html-clean.el]], [[file:dracula.el][dracula.el]] and [[file:dracula-tests.el][dracula-tests.el]], and run =ert-run-tests-batch-and-exit= from the command line:
 
    #+begin_src emacs-lisp
-     emacs -batch -l ert -l vendor/org-export-html-clean/ox-html-clean.el -l dracula.el -l dracula-tests.el -f ert-run-tests-batch-and-exit
+     emacs -batch --eval "(package-initialize)" -l ert -l vendor/org-export-html-clean/ox-html-clean.el -l dracula.el -l dracula-tests.el -f ert-run-tests-batch-and-exit
    #+end_src
 
    #+begin_src emacs-lisp :noweb yes :exports none :tangle dracula-tests.el
