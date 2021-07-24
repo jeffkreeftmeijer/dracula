@@ -13,6 +13,7 @@
 							      (cons 'plain-text org-element-all-objects)
 							    'identity info)))
 					    ("description" . ,(plist-get info :description))
+					    ("home" . ,(plist-get info :html-link-home))
 					    ("path" . ,(plist-get info :html-path))
 					    ("twitter" . ,(plist-get info :twitter))))
       (org-html-template contents info))))

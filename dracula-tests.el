@@ -17,6 +17,7 @@
     (should (string-match-p "subtitle: A subtitle" contents))
     (should (string-match-p "author: Alice" contents))
     (should (string-match-p "description: A page generated with a template" contents))
+    (should (string-match-p "home: http://example.com" contents))
     (should (string-match-p "path: /template/" contents))
     (should (string-match-p "twitter: @twitter" contents))))
 
