@@ -18,6 +18,7 @@
     (should (string-match-p "date: 2021-07-13" contents))
     (should (string-match-p (concat "updated: " (format-time-string "%Y-%m-%d")) contents))
     (should (string-match-p "author: Alice" contents))
+    (should (string-match-p "image: image.jpg" contents))
     (should (string-match-p "description: A page generated with a template" contents))
     (should (string-match-p "home: http://example.com" contents))
     (should (string-match-p "path: /template/" contents))

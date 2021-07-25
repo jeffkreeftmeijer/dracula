@@ -22,6 +22,7 @@
 							  (org-element-map (plist-get info :author)
 							      (cons 'plain-text org-element-all-objects)
 							    'identity info)))
+					    ("image" . ,(plist-get info :image))
 					    ("description" . ,(plist-get info :description))
 					    ("home" . ,(plist-get info :html-link-home))
 					    ("path" . ,(plist-get info :html-path))
@@ -99,6 +100,7 @@ holding contextual information."
 (org-export-define-derived-backend 'dracula-html 'html-clean
   :options-alist '((:html-template "HTML_TEMPLATE" nil nil newline)
 		   (:html-path "HTML_PATH" nil nil nil)
+		   (:image "IMAGE" nil nil nil)
 		   (:twitter "TWITTER" nil nil nil))
   :translate-alist '((template . org-dracula-html-template)
 		     (section . org-dracula-html-section)
