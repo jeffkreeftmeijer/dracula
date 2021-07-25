@@ -31,6 +31,14 @@
   (should (not (string-match-p "<div id=\"outline-container" (dracula-test-published-file-contents))))
   (should (not (string-match-p "<div id=\"outline-text" (dracula-test-published-file-contents)))))
 
+(ert-deftest dracula-test-links ()
+  "Links to other HTML pages"
+  (should (string-match-p "<a href=\"/\">index.org</a>" (dracula-test-published-file-contents)))
+  (should (string-match-p "<a href=\"/template/\">template.org</a>" (dracula-test-published-file-contents)))
+  (should (string-match-p "<a href=\"/foo/\">foo/index.org</a>" (dracula-test-published-file-contents)))
+  (should (string-match-p "<a href=\"/bar/\">bar/bar.org</a>" (dracula-test-published-file-contents)))
+  (should (string-match-p "<a href=\"/bar/baz/\">bar/baz.org</a>" (dracula-test-published-file-contents))))
+
 (ert-deftest dracula-test-htmlize ()
   "Styles code blocks through CSS classes"
   (should (string-match-p "<span class=\"org-string\">\"Hello from Ruby!\"</span>" (dracula-test-published-file-contents))))

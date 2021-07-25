@@ -11,3 +11,9 @@ An aside.
 #+begin_src ruby
 puts "Hello from Ruby!"
 #+end_src
+
+[[file:index.org][index.org]]
+[[file:template.org][template.org]]
+[[file:foo/index.org][foo/index.org]]
+[[file:bar/bar.org][bar/bar.org]]
+[[file:bar/baz.org][bar/baz.org]]

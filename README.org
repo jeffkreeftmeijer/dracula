@@ -23,6 +23,20 @@ Generates blogs from org files.
        (should (file-exists-p "fixtures/_output/bar/baz/index.html")))
    #+end_src
 
+** Links
+
+   Convert links to =.org= files to directory-based links in HTML.
+
+   #+begin_src emacs-lisp :noweb-ref links
+     (ert-deftest dracula-test-links ()
+       "Links to other HTML pages"
+       (should (string-match-p "<a href=\"/\">index.org</a>" (dracula-test-published-file-contents)))
+       (should (string-match-p "<a href=\"/template/\">template.org</a>" (dracula-test-published-file-contents)))
+       (should (string-match-p "<a href=\"/foo/\">foo/index.org</a>" (dracula-test-published-file-contents)))
+       (should (string-match-p "<a href=\"/bar/\">bar/bar.org</a>" (dracula-test-published-file-contents)))
+       (should (string-match-p "<a href=\"/bar/baz/\">bar/baz.org</a>" (dracula-test-published-file-contents))))
+   #+end_src
+
 ** Document templates
 
    Use the =html_template+ option to replace the default document layout with a custom [[https://github.com/clarete/templatel][templatel]] template.
@@ -179,6 +193,8 @@ Generates blogs from org files.
      <<templates>>
 
      <<wrapper-divs>>
+
+     <<links>>
 
      <<htmlize>>
 
