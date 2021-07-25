@@ -23,6 +23,7 @@
     (should (string-match-p "home: http://example.com" contents))
     (should (string-match-p "path: /template/" contents))
     (should (string-match-p "twitter: @twitter" contents))
+    (should (string-match-p "acknowledgements: Thanks, Bob." contents))
     (should (string-match-p "<style></style>" contents))))
 
 (ert-deftest dracula-test-wrapper-divs ()
