@@ -48,6 +48,10 @@
   "Does not include the table of contents"
   (should (not (string-match-p "Table of Contents" (dracula-test-published-file-contents)))))
 
+(ert-deftest dracula-test-smart-quotes ()
+  "Includes smart quotes"
+  (should (string-match-p "&ldquo;Smart&rdquo; quotes." (dracula-test-published-file-contents))))
+
 (defun dracula-test-file-contents (filename)
   "Return the contents of FILENAME."
   (with-temp-buffer

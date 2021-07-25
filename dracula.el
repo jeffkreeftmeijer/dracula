@@ -2,6 +2,8 @@
 (require 'ox-html-clean)
 (require 'templatel)
 
+(setq org-export-with-smart-quotes t)
+
 (defun org-dracula-html-template (contents info)
   (let ((template (plist-get info :html-template)))
     (if template

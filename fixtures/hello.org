@@ -5,3 +5,5 @@
 #+BEGIN_aside
 An aside.
 #+END_aside
+
+"Smart" quotes.
