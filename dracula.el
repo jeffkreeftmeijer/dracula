@@ -27,11 +27,15 @@
 					    ("twitter" . ,(plist-get info :twitter))))
       (org-html-template contents info))))
 
+(defun org-dracula-html-section (section contents info)
+  (or contents ""))
+
 (org-export-define-derived-backend 'dracula-html 'html-clean
   :options-alist '((:html-template "HTML_TEMPLATE" nil nil newline)
 		   (:html-path "HTML_PATH" nil nil nil)
 		   (:twitter "TWITTER" nil nil nil))
-  :translate-alist '((template . org-dracula-html-template)))
+  :translate-alist '((template . org-dracula-html-template)
+		     (section . org-dracula-html-section)))
 
 (defun org-dracula-html-publish-to-html (plist filename pub-dir)
   (advice-add 'org-export-output-file-name

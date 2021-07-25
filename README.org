@@ -69,6 +69,17 @@ Generates blogs from org files.
 	 (should (string-match-p "<style></style>" contents))))
    #+end_src
 
+** Section wrapper divs
+
+   Dracula removes outline-text wrapper divs from document sections.
+
+   #+begin_src emacs-lisp :noweb-ref wrapper-divs
+     (ert-deftest dracula-test-wrapper-divs ()
+       "Does not wrap sections"
+       (should (not (string-match-p "<div id=\"outline-text" (dracula-test-published-file-contents)))))
+   #+end_src
+
+
 ** HTML5 doctype
 
    Dracula chooses the HTML5 doctype by default.
@@ -150,6 +161,8 @@ Generates blogs from org files.
      <<index-filenames>>
 
      <<templates>>
+
+     <<wrapper-divs>>
 
      <<doctype>>
 

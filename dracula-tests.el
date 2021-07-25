@@ -24,6 +24,10 @@
     (should (string-match-p "twitter: @twitter" contents))
     (should (string-match-p "<style></style>" contents))))
 
+(ert-deftest dracula-test-wrapper-divs ()
+  "Does not wrap sections"
+  (should (not (string-match-p "<div id=\"outline-text" (dracula-test-published-file-contents)))))
+
 (ert-deftest dracula-test-doctype ()
   "Uses the html5 doctype for published HTML files."
   (should (string-match-p "<!doctype html>" (dracula-test-published-file-contents))))
