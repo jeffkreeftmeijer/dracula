@@ -28,6 +28,10 @@
   "Does not wrap sections"
   (should (not (string-match-p "<div id=\"outline-text" (dracula-test-published-file-contents)))))
 
+(ert-deftest dracula-test-htmlize ()
+  "Styles code blocks through CSS classes"
+  (should (string-match-p "<span class=\"org-string\">\"Hello from Ruby!\"</span>" (dracula-test-published-file-contents))))
+
 (ert-deftest dracula-test-doctype ()
   "Uses the html5 doctype for published HTML files."
   (should (string-match-p "<!doctype html>" (dracula-test-published-file-contents))))

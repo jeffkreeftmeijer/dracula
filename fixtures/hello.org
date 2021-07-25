@@ -7,3 +7,7 @@ An aside.
 #+END_aside
 
 "Smart" quotes.
+
+#+begin_src ruby
+puts "Hello from Ruby!"
+#+end_src

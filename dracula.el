@@ -3,6 +3,7 @@
 (require 'templatel)
 
 (setq org-export-with-smart-quotes t)
+(setq org-html-htmlize-output-type 'css)
 
 (defun org-dracula-html-template (contents info)
   (let ((template (plist-get info :html-template)))

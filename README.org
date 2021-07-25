@@ -79,6 +79,15 @@ Generates blogs from org files.
        (should (not (string-match-p "<div id=\"outline-text" (dracula-test-published-file-contents)))))
    #+end_src
 
+** HTMLize styling through CSS classes
+
+   Dracula chooses to style code blocks through CSS classes instead of inline rules.
+
+   #+begin_src emacs-lisp :noweb-ref htmlize
+     (ert-deftest dracula-test-htmlize ()
+       "Styles code blocks through CSS classes"
+       (should (string-match-p "<span class=\"org-string\">\"Hello from Ruby!\"</span>" (dracula-test-published-file-contents))))
+   #+end_src
 
 ** HTML5 doctype
 
@@ -163,6 +172,8 @@ Generates blogs from org files.
      <<templates>>
 
      <<wrapper-divs>>
+
+     <<htmlize>>
 
      <<doctype>>
 
