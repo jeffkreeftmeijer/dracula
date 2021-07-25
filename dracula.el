@@ -71,37 +71,30 @@ holding contextual information."
 	     (and (org-export-last-sibling-p headline info)
 		  (format "</%s>\n" html-type))))
 	;; Standard headline.  Export it as a section.
-        (let ((extra-class
-	       (org-element-property :HTML_CONTAINER_CLASS headline))
-	      (headline-class
+	(let ((headline-class
 	       (org-element-property :HTML_HEADLINE_CLASS headline))
-              (first-content (car (org-element-contents headline))))
-          (format "<%s id=\"%s\" class=\"%s\">%s%s</%s>\n"
-                  (org-html--container headline info)
-                  (format "outline-container-%s" id)
-                  (concat (format "outline-%d" level)
-                          (and extra-class " ")
-                          extra-class)
-                  (format "\n<h%d id=\"%s\"%s>%s</h%d>\n"
-                          level
-                          id
-			  (if (not headline-class) ""
-			    (format " class=\"%s\"" headline-class))
-                          (concat
-                           (and numberedp
-                                (format
-                                 "<span class=\"section-number-%d\">%s</span> "
-                                 level
-                                 (concat (mapconcat #'number-to-string numbers ".") ".")))
-                           formatted-text)
-                          level)
-                  ;; When there is no section, pretend there is an
-                  ;; empty one to get the correct <div
-                  ;; class="outline-...> which is needed by
-                  ;; `org-info.js'.
-                  (if (eq (org-element-type first-content) 'section) contents
-                    (concat (org-html-section first-content "" info) contents))
-                  (org-html--container headline info)))))))
+	      (first-content (car (org-element-contents headline))))
+	  (concat
+	   (format "\n<h%d id=\"%s\"%s>%s</h%d>\n"
+		   level
+		   id
+		   (if (not headline-class) ""
+		     (format " class=\"%s\"" headline-class))
+		   (concat
+		    (and numberedp
+			 (format
+			  "<span class=\"section-number-%d\">%s</span> "
+			  level
+			  (concat (mapconcat #'number-to-string numbers ".") ".")))
+		    formatted-text)
+		   level)
+	   ;; When there is no section, pretend there is an
+	   ;; empty one to get the correct <div
+	   ;; class="outline-...> which is needed by
+	   ;; `org-info.js'.
+	   (if (eq (org-element-type first-content) 'section) contents
+	     (concat (org-html-section first-content "" info) contents))
+	   ))))))
 
 (org-export-define-derived-backend 'dracula-html 'html-clean
   :options-alist '((:html-template "HTML_TEMPLATE" nil nil newline)

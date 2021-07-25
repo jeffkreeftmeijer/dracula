@@ -26,6 +26,7 @@
 
 (ert-deftest dracula-test-wrapper-divs ()
   "Does not wrap sections"
+  (should (not (string-match-p "<div id=\"outline-container" (dracula-test-published-file-contents))))
   (should (not (string-match-p "<div id=\"outline-text" (dracula-test-published-file-contents)))))
 
 (ert-deftest dracula-test-htmlize ()
