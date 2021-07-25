@@ -1,0 +1,26 @@
+#+title: With a template
+#+subtitle: A subtitle
+#+date: 2021-07-13
+#+description: A page generated with a template
+#+image: image.jpg
+#+author: Alice
+#+html_link_home: http://example.com
+#+html_path: /template/
+#+twitter: twitter
+#+acknowledgements: Thanks, Bob.
+#+html_head: <style></style>
+#+html_template: {{ head }}
+#+html_template: <h1>{{ title }}</h1>
+#+html_template: {{ contents }}
+#+html_template: subtitle: {{ subtitle }}
+#+html_template: date: {{ date }}
+#+html_template: updated: {{ date_updated }}
+#+html_template: description: {{ description }}
+#+html_template: image: {{ image }}
+#+html_template: author: {{ author }}
+#+html_template: home: {{ home }}
+#+html_template: path: {{ path }}
+#+html_template: twitter: @{{ twitter }}
+#+html_template: acknowledgements: {{ acknowledgements }}
+
+This page has a custom template.
