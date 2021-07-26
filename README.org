@@ -100,6 +100,16 @@ Generates blogs from org files.
        (should (not (string-match-p "<div id=\"outline-text" (dracula-test-published-file-contents)))))
    #+end_src
 
+** Code block ids
+
+   Dracula does not add ids to unnamed example blocks
+
+   #+begin_src emacs-lisp :noweb-ref unnamed-ids
+     (ert-deftest dracula-test-unnamed-ids ()
+       "Does not add ids to unnamed example blocks"
+       (should (string-match-p "<pre class=\"example\">" (dracula-test-published-file-contents))))
+   #+end_src
+
 ** HTMLize styling through CSS classes
 
    Dracula chooses to style code blocks through CSS classes instead of inline rules.
@@ -193,6 +203,8 @@ Generates blogs from org files.
      <<templates>>
 
      <<wrapper-divs>>
+
+     <<unnamed-ids>>
 
      <<links>>
 

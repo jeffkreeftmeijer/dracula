@@ -31,6 +31,10 @@
   (should (not (string-match-p "<div id=\"outline-container" (dracula-test-published-file-contents))))
   (should (not (string-match-p "<div id=\"outline-text" (dracula-test-published-file-contents)))))
 
+(ert-deftest dracula-test-unnamed-ids ()
+  "Does not add ids to unnamed example blocks"
+  (should (string-match-p "<pre class=\"example\">" (dracula-test-published-file-contents))))
+
 (ert-deftest dracula-test-links ()
   "Links to other HTML pages"
   (should (string-match-p "<a href=\"/\">index.org</a>" (dracula-test-published-file-contents)))

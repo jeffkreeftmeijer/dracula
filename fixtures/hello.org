@@ -17,3 +17,7 @@ puts "Hello from Ruby!"
 [[file:foo/index.org][foo/index.org]]
 [[file:bar/bar.org][bar/bar.org]]
 [[file:bar/baz.org][bar/baz.org]]
+
+#+begin_example
+An example.
+#+end_example
